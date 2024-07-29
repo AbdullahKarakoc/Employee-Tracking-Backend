@@ -16,8 +16,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         email = "abdullahkrkc1453@gmail.com",
                         url = "https://abdullahkrkc.com/blog"
                 ),
-                description = "OpenApi documentation for Rent A Car",
-                title = "Rent A Car",
+                description = "OpenApi documentation for Employee Tracking",
+                title = "Employee Tracking",
                 version = "1.0",
                 license = @License(
                         name = "License name",
