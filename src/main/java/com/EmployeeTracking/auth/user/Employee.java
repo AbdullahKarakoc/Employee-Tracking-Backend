@@ -1,6 +1,7 @@
 package com.EmployeeTracking.auth.user;
 
 import com.EmployeeTracking.auth.role.Role;
+import com.EmployeeTracking.domain.model.Performances;
 import com.EmployeeTracking.domain.model.Teams;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -60,6 +61,12 @@ public class Employee implements UserDetails, Principal {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUUID", nullable = true)
     private Teams team;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "performanceUUID", referencedColumnName = "performanceUUID")
+    private Performances performance;
+
 
 
     @CreatedDate
