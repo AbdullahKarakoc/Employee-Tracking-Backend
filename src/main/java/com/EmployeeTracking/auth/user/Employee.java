@@ -1,5 +1,6 @@
 package com.EmployeeTracking.auth.user;
 
+import com.EmployeeTracking.auth.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
