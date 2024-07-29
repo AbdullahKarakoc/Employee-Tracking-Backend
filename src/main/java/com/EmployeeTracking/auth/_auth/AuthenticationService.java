@@ -121,8 +121,8 @@ public class AuthenticationService {
         var newToken = generateAndSaveActivationToken(employee);
 
         emailService.sendEmail(
-                user.getEmail(),
-                user.getFullName(),
+                employee.getEmail(),
+                employee.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
                 newToken,
