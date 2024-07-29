@@ -2,6 +2,9 @@ package com.EmployeeTracking.auth._auth;
 
 import com.EmployeeTracking.auth.email.EmailService;
 import com.EmployeeTracking.auth.email.EmailTemplateName;
+import com.EmployeeTracking.auth.handler.ActivationTokenExpiredException;
+import com.EmployeeTracking.auth.handler.InvalidTokenException;
+import com.EmployeeTracking.auth.handler.UserAlreadyExistsException;
 import com.EmployeeTracking.auth.role.RoleRepository;
 import com.EmployeeTracking.auth.security.JwtService;
 import com.EmployeeTracking.auth.user.Employee;
