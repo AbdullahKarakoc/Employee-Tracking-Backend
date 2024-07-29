@@ -23,6 +23,23 @@ public class TeamsController {
     @Autowired
     private TeamsService teamService;
 
+
+    @Operation(
+            summary = "Save a new team",
+            description = "An endpoint used to save a new team.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Team successfully saved"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input"),
+                    @ApiResponse(responseCode = "403", description = "Unauthorized access")
+            }
+    )
+    @PostMapping
+    public ResponseEntity<TeamsResponseDto> saveTeam(@Valid @RequestBody TeamsRequestDto teamRequestDto) {
+        TeamsResponseDto savedTeam = teamService.saveTeam(teamRequestDto);
+        return ResponseEntity.ok(savedTeam);
+    }
+
+
     @Operation(
             summary = "Get all teams",
             description = "An endpoint used to list all teams.",
@@ -52,20 +69,7 @@ public class TeamsController {
         return ResponseEntity.ok(team);
     }
 
-    @Operation(
-            summary = "Save a new team",
-            description = "An endpoint used to save a new team.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Team successfully saved"),
-                    @ApiResponse(responseCode = "400", description = "Invalid input"),
-                    @ApiResponse(responseCode = "403", description = "Unauthorized access")
-            }
-    )
-    @PostMapping
-    public ResponseEntity<TeamsResponseDto> saveTeam(@Valid @RequestBody TeamsRequestDto teamRequestDto) {
-        TeamsResponseDto savedTeam = teamService.saveTeam(teamRequestDto);
-        return ResponseEntity.ok(savedTeam);
-    }
+
 
     @Operation(
             summary = "Update team",
