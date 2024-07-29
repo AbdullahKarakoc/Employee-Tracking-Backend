@@ -1,6 +1,9 @@
 package com.EmployeeTracking.auth._auth;
 
+import com.EmployeeTracking.auth.email.EmailService;
+import com.EmployeeTracking.auth.email.EmailTemplateName;
 import com.EmployeeTracking.auth.role.RoleRepository;
+import com.EmployeeTracking.auth.security.JwtService;
 import com.EmployeeTracking.auth.user.Employee;
 import com.EmployeeTracking.auth.user.EmployeeRepository;
 import com.EmployeeTracking.auth.user.Token;
@@ -35,10 +38,10 @@ public class AuthenticationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegistrationRequest reguest) throws MessagingException {
+    public void register(RegistrationRequest request) throws MessagingException {
         // Check if the user already exists
         if (employeeRepository.findByEmail(request.getEmail()).isPresent()){
-            throw new UserAlreadyExistsException("User with email" + reguest.getEmail() + "already exist");
+            throw new UserAlreadyExistsException("User with email" + request.getEmail() + "already exist");
         }
 
         // Get the USER role
@@ -47,11 +50,11 @@ public class AuthenticationService {
 
         // Create new user
         var employee = Employee.builder()
-                .firstname(reguest.getFirstname())
-                .lastname(reguest.getLastname())
-                .dateOfBirth(reguest.getDateOfBirth())
-                .email(reguest.getEmail())
-                .password(passwordEncoder.encode(reguest.getPassword()))
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .dateOfBirth(request.getDateOfBirth())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
                 .roles(List.of(employeeRole))
@@ -88,11 +91,11 @@ public class AuthenticationService {
                 // todo exception has to be defined
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
-            sendValidationEmail(savedToken.getUser());
+            sendValidationEmail(savedToken.getEmployee());
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        var employee = employeeRepository.findById(savedToken.getUser().getUserUUID())
+        var employee = employeeRepository.findById(savedToken.getEmployee().getUserUUID())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         employee.setEnabled(true);
         employeeRepository.save(employee);
