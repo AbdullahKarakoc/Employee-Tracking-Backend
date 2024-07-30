@@ -3,7 +3,9 @@ package com.EmployeeTracking.domain.request;
 import com.EmployeeTracking.enums.ProjectStatus;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
+@Data
 public class StatusRequestDto {
 
     @NotNull(message = "Project Status is required")

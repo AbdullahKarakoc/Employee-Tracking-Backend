@@ -1,17 +1,19 @@
 package com.EmployeeTracking.domain.response;
 
-import com.EmployeeTracking.enums.ProjectStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-public class StatusResponseDto {
-    
-    private UUID statusUUID;
-    private ProjectStatus status;
+public class ProjectsResponseDto {
+
+    private UUID projectUUID;
+    private String name;
     private String description;
+    private LocalDateTime startDate;
+    private LocalDateTime deadline;
+    private LocalDateTime finishDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String createdBy;
