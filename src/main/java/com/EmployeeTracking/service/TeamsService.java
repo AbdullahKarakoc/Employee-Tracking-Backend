@@ -53,11 +53,11 @@ public class TeamsService {
         save(team);
     }
 
-    private Teams save(Teams team) {
+    public Teams save(Teams team) {
         return teamRepository.saveAndFlush(team);
     }
 
-    private Teams findById(UUID id) {
+    public Teams findById(UUID id) {
         return teamRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Team not found"));
     }

@@ -53,11 +53,11 @@ public class StatusService {
         save(status);
     }
 
-    private Status save(Status status) {
+    public Status save(Status status) {
         return statusRepository.saveAndFlush(status);
     }
 
-    private Status findById(UUID id) {
+    public Status findById(UUID id) {
         return statusRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Status not found"));
     }

@@ -53,11 +53,11 @@ public class PerformancesService {
         save(performance);
     }
 
-    private Performances save(Performances performance) {
+    public Performances save(Performances performance) {
         return performancesRepository.saveAndFlush(performance);
     }
 
-    private Performances findById(UUID id) {
+    public Performances findById(UUID id) {
         return performancesRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Performance not found"));
     }

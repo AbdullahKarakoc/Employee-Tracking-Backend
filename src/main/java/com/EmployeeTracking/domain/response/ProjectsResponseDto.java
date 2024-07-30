@@ -14,6 +14,7 @@ public class ProjectsResponseDto {
     private LocalDateTime startDate;
     private LocalDateTime deadline;
     private LocalDateTime finishDate;
+    private StatusResponseDto status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String createdBy;
