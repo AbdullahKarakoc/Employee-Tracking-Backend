@@ -67,11 +67,11 @@ public class TasksService {
         save(task);
     }
 
-    private Tasks save(Tasks task) {
+    public Tasks save(Tasks task) {
         return tasksRepository.saveAndFlush(task);
     }
 
-    private Tasks findById(UUID id) {
+    public Tasks findById(UUID id) {
         return tasksRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Task not found"));
     }
