@@ -46,6 +46,9 @@ public class Tasks {
     @JoinColumn(name = "projectUUID", nullable = true)
     private Projects project;
 
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<Comments> comment;
+
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

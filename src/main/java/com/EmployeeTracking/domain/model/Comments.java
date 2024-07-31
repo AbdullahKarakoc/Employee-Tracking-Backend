@@ -1,7 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
 import com.EmployeeTracking.auth.user.Employee;
-import com.EmployeeTracking.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,20 +21,26 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "status")
-@SQLDelete(sql = "UPDATE status SET deleted = true WHERE statusUUID=?")
+@Table(name = "comment")
+@SQLDelete(sql = "UPDATE comment SET deleted = true WHERE commentUUID=?")
 @Where(clause = "deleted=false")
-public class Status {
+public class Comments {
 
     @Id
     @GeneratedValue
-    private UUID statusUUID;
-    private ProjectStatus status;
+    private UUID commentUUID;
+    private String title;
     private String description;
     private boolean deleted = Boolean.FALSE;
 
-    @OneToOne(mappedBy = "status", cascade = CascadeType.ALL)
-    private Projects project;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userUUID", nullable = true)
+    private Employee employee;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "taskUUID", nullable = true)
+    private Tasks task;
+
 
 
     @CreatedDate

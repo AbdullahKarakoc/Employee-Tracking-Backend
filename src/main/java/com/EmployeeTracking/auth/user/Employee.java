@@ -73,6 +73,8 @@ public class Employee implements UserDetails, Principal {
     @JoinColumn(name = "taskUUID", nullable = true)
     private Tasks task;
 
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    private List<Comments> comment;
 
 
 
