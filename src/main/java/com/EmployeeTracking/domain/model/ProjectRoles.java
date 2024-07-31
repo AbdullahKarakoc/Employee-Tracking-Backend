@@ -22,29 +22,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "project")
-@SQLDelete(sql = "UPDATE project SET deleted = true WHERE projectUUID=?")
+@Table(name = "project_roles")
+@SQLDelete(sql = "UPDATE project_roles SET deleted = true WHERE projectRolesUUID=?")
 @Where(clause = "deleted=false")
-public class Projects {
+public class ProjectRoles {
 
     @Id
     @GeneratedValue
-    private UUID projectUUID;
-    private String name;
+    private UUID projectRolesUUID;
+    private String employeeRole;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime deadline;
-    private LocalDateTime finishDate;
     private boolean deleted = Boolean.FALSE;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="statusUUID", nullable=false)
-    private Status status;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "projectUUID", nullable = true)
+    private Projects project;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<ProjectRoles> projectRoles;
-
+    @OneToMany(mappedBy = "project_roles", cascade = CascadeType.ALL)
+    private List<Employee> employees;
 
 
     @CreatedDate
