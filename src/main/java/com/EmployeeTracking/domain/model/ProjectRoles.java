@@ -39,7 +39,7 @@ public class ProjectRoles {
     @JoinColumn(name = "projectUUID", nullable = true)
     private Projects project;
 
-    @OneToMany(mappedBy = "project_roles", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projectRole", cascade = CascadeType.ALL)
     private List<Employee> employees;
 
 

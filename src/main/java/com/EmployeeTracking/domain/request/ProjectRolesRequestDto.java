@@ -1,8 +1,12 @@
 package com.EmployeeTracking.domain.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class ProjectRolesRequestDto {
@@ -13,4 +17,9 @@ public class ProjectRolesRequestDto {
 
     @Size(max = 250, message = "Project role description must be less than 250 characters")
     private String description;
+
+    @Valid
+    @NotNull(message = "Project ID is required")
+    private UUID projectUUID;
+
 }

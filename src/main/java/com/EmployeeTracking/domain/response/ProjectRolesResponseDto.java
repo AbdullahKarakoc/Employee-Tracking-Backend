@@ -11,6 +11,7 @@ public class ProjectRolesResponseDto {
     private UUID projectRolesUUID;
     private String employeeRole;
     private String description;
+    private ProjectsResponseDto project;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String createdBy;
