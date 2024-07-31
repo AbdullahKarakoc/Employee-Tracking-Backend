@@ -37,5 +37,4 @@ public class TasksRequestDto {
 
     @NotNull(message = "Project ID is required")
     private UUID projectUUID;
-
 }
