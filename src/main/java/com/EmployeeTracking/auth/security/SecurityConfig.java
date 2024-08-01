@@ -3,6 +3,7 @@ package com.EmployeeTracking.auth.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +49,38 @@ public class SecurityConfig {
                                         "/swagger-ui/index.html"
                                 )
                                 .permitAll()
+                                .requestMatchers(HttpMethod.GET,"/employees/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/employees/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/employees/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/employees/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/comment/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/comment/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/comment/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/comment/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/performance/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/performance/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/performance/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/performance/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/project_roles/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/project_roles/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/project_roles/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/project_roles/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/project/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/project/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/project/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/project/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/status/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/status/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/status/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/status/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/task/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/task/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/task/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/task/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.GET,"/team/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.POST,"/team/**").hasAnyAuthority("USER","ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.PUT,"/team/**").hasAnyAuthority("ADMIN","SUPER_USER")
+                                .requestMatchers(HttpMethod.DELETE,"/team/**").hasAnyAuthority("ADMIN","SUPER_USER")
                                 .anyRequest()
                                 .authenticated()
                 )
