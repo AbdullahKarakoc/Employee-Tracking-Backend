@@ -1,5 +1,7 @@
 package com.EmployeeTracking.auth._auth;
 
+import com.EmployeeTracking.enums.ProjectStatus;
+import com.EmployeeTracking.enums.UserRole;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +31,6 @@ public class RegistrationRequest {
     @NotNull(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")
     private String password;
-
+    @NotNull(message = "User role is required")
+    private UserRole role;
 }

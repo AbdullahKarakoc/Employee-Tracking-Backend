@@ -47,9 +47,9 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException("User with email" + request.getEmail() + "already exist");
         }
 
-        // Get the USER role
-        var employeeRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
+        // Get the role from the request
+        var role = roleRepository.findByName(request.getRole().getValue())
+                .orElseThrow(() -> new IllegalStateException("ROLE " + request.getRole() + " was not initiated"));
 
         // Create new user
         var employee = Employee.builder()
@@ -60,7 +60,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .roles(List.of(employeeRole))
+                .roles(List.of(role)) // Assign the role
                 .build();
 
         // Save user and send validation email

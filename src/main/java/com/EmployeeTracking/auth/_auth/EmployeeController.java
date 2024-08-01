@@ -3,6 +3,7 @@ package com.EmployeeTracking.auth._auth;
 import com.EmployeeTracking.auth.user.EmployeeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("employees")
+@SecurityRequirement(name = "bearerAuth")
 public class EmployeeController {
 
     @Autowired
