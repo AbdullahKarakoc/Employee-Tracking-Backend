@@ -5,6 +5,7 @@ import com.EmployeeTracking.auth.email.EmailTemplateName;
 import com.EmployeeTracking.auth.handler.ActivationTokenExpiredException;
 import com.EmployeeTracking.auth.handler.InvalidTokenException;
 import com.EmployeeTracking.auth.handler.UserAlreadyExistsException;
+import com.EmployeeTracking.auth.role.Role;
 import com.EmployeeTracking.auth.role.RoleRepository;
 import com.EmployeeTracking.auth.security.JwtService;
 import com.EmployeeTracking.auth.user.Employee;
@@ -24,6 +25,7 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,32 +43,51 @@ public class AuthenticationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegistrationRequest request) throws MessagingException {
+
+    public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
         // Check if the user already exists
-        if (employeeRepository.findByEmail(request.getEmail()).isPresent()){
-            throw new UserAlreadyExistsException("User with email" + request.getEmail() + "already exist");
+        if (employeeRepository.findByEmail(userInvitationDto.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with email " + userInvitationDto.getEmail() + " already exists");
         }
 
         // Get the role from the request
-        var role = roleRepository.findByName(request.getRole().getValue())
-                .orElseThrow(() -> new IllegalStateException("ROLE " + request.getRole() + " was not initiated"));
+        var role = roleRepository.findByName(userInvitationDto.getRole())
+                .orElseThrow(() -> new IllegalStateException("ROLE " + userInvitationDto.getRole() + " was not initiated"));
 
         // Create new user
-        var employee = Employee.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .dateOfBirth(request.getDateOfBirth())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .accountLocked(false)
-                .enabled(false)
-                .roles(List.of(role)) // Assign the role
-                .build();
+        var employee = new Employee();
+        employee.setEmail(userInvitationDto.getEmail());
+        employee.setEnabled(false);
+        employee.setRoles(List.of(role)); // Assign the role
 
         // Save user and send validation email
         employeeRepository.save(employee);
         sendValidationEmail(employee);
     }
+
+
+
+    public void registerUser(RegisterDto registerDto) {
+        Token token = tokenRepository.findByToken(registerDto.getActivationCode())
+                .orElseThrow(() -> new RuntimeException("Invalid activation code"));
+
+        if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
+            throw new RuntimeException("Activation code has expired");
+        }
+
+        Employee employee = token.getEmployee();
+        employee.setFirstname(registerDto.getFirstName());
+        employee.setLastname(registerDto.getLastName());
+        employee.setDateOfBirth(registerDto.getDateOfBirth());
+        employee.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        employee.setEnabled(true);
+
+        employeeRepository.save(employee);
+
+        token.setValidatedAt(LocalDateTime.now());
+        tokenRepository.save(token);
+    }
+
 
 
 
@@ -89,9 +110,8 @@ public class AuthenticationService {
     }
 
 
-    public void activateAccount(String token) throws MessagingException {
+    public String  activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
-                // todo exception has to be defined
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
         if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getEmployee());
@@ -105,18 +125,18 @@ public class AuthenticationService {
 
         savedToken.setValidatedAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
-    }
 
+        return "http://localhost:3000/complete-registration?activationCode=" + token;
+    }
 
     private String generateAndSaveActivationToken(Employee employee) {
         // Generate a token
         String generatedToken = generateActivationCode(6);
-        var token = Token.builder()
-                .token(generatedToken)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(15))
-                .employee(employee)
-                .build();
+        var token = new Token();
+        token.setToken(generatedToken);
+        token.setCreatedAt(LocalDateTime.now());
+        token.setExpiresAt(LocalDateTime.now().plusMinutes(15));
+        token.setEmployee(employee);
         tokenRepository.save(token);
 
         return generatedToken;
@@ -124,14 +144,14 @@ public class AuthenticationService {
 
 
     private void sendValidationEmail(Employee employee) throws MessagingException {
-        var newToken = generateAndSaveActivationToken(employee);
+        var activationCode = generateAndSaveActivationToken(employee);
 
         emailService.sendEmail(
                 employee.getEmail(),
-                employee.getFullName(),
+                employee.getFirstname() + " " + employee.getLastname(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
-                activationUrl,
-                newToken,
+                activationUrl + "?activationCode=" + activationCode,
+                activationCode,
                 "Account activation"
         );
     }

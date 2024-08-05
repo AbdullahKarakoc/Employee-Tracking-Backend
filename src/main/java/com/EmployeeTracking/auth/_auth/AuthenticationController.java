@@ -17,25 +17,29 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-
     @PreAuthorize("hasAuthority('SUPER_USER')")
-    @PostMapping("/register")
+    @PostMapping("/invite")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequest request) throws MessagingException {
-        service.register(request);
+    public ResponseEntity<?> inviteUser(@RequestBody @Valid UserInvitationDto request) throws MessagingException {
+        service.inviteUser(request);
         return ResponseEntity.accepted().build();
     }
 
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDto request) {
+        service.registerUser(request);
+        return ResponseEntity.accepted().build();
+    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-
     @GetMapping("/activate-account")
-    public void confirm(@RequestParam String token) throws MessagingException {service.activateAccount(token);
+    public ResponseEntity<String> confirm(@RequestParam String activationCode) throws MessagingException {
+        String redirectUrl = service.activateAccount(activationCode);
+        return ResponseEntity.ok(redirectUrl);
     }
-
-
 }

@@ -38,7 +38,7 @@ application:
       expiration: 86400000  # geçerlilik süresi
   mailing:
     frontend:
-      activation-url: http://localhost:4200/activate-account
+      activation-url: http://localhost:3000/activate-account
 server:
   port: 8088
 
