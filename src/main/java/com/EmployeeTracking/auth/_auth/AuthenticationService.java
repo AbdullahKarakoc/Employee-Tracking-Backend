@@ -45,22 +45,19 @@ public class AuthenticationService {
 
 
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
-        // Check if the user already exists
+
         if (employeeRepository.findByEmail(userInvitationDto.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User with email " + userInvitationDto.getEmail() + " already exists");
         }
 
-        // Get the role from the request
         var role = roleRepository.findByName(userInvitationDto.getRole())
                 .orElseThrow(() -> new IllegalStateException("ROLE " + userInvitationDto.getRole() + " was not initiated"));
 
-        // Create new user
         var employee = new Employee();
         employee.setEmail(userInvitationDto.getEmail());
         employee.setEnabled(false);
-        employee.setRoles(List.of(role)); // Assign the role
+        employee.setRoles(List.of(role));
 
-        // Save user and send validation email
         employeeRepository.save(employee);
         sendValidationEmail(employee);
     }
@@ -130,7 +127,7 @@ public class AuthenticationService {
     }
 
     private String generateAndSaveActivationToken(Employee employee) {
-        // Generate a token
+
         String generatedToken = generateActivationCode(6);
         var token = new Token();
         token.setToken(generatedToken);
