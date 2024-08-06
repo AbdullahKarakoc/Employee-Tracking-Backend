@@ -1,30 +1,24 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.auth.user.service;
 
-import com.EmployeeTracking.auth.user.Employee;
-import com.EmployeeTracking.auth.user.EmployeeRepository;
-import com.EmployeeTracking.auth.user.EmployeeResponseDto;
+import com.EmployeeTracking.auth._auth.AuthenticationRequest;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
+import com.EmployeeTracking.auth.user.repository.EmployeeRepository;
+import com.EmployeeTracking.auth.user.domain.response.EmployeeResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class EmployeeService {
+
     private final EmployeeRepository employeeRepository;
-
     private final ModelMapper modelMapper;
-
-    private EmployeeService(
-            EmployeeRepository employeeRepository,
-            ModelMapper modelMapper){
-
-        this.employeeRepository = employeeRepository;
-        this.modelMapper = modelMapper;
-    }
 
 
     public List<EmployeeResponseDto> getAllUsers() {

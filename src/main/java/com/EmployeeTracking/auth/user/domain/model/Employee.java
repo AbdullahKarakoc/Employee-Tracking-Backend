@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.user;
+package com.EmployeeTracking.auth.user.domain.model;
 
 import com.EmployeeTracking.auth.role.Role;
 import com.EmployeeTracking.domain.model.*;
@@ -29,7 +29,6 @@ import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -41,7 +40,7 @@ public class Employee implements UserDetails, Principal {
 
     @Id
     @GeneratedValue
-    private UUID userUUID;
+    private UUID employeeId;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;
@@ -58,19 +57,19 @@ public class Employee implements UserDetails, Principal {
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teamUUID", nullable = true)
+    @JoinColumn(name = "teamId", nullable = true)
     private Teams team;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "performanceUUID", referencedColumnName = "performanceUUID")
+    @JoinColumn(name = "performanceId", referencedColumnName = "performanceId")
     private Performances performance;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "projectRolesUUID", nullable = true)
+    @JoinColumn(name = "projectRolesId", nullable = true)
     private ProjectRoles projectRole;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "taskUUID", nullable = true)
+    @JoinColumn(name = "taskId", nullable = true)
     private Tasks task;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)

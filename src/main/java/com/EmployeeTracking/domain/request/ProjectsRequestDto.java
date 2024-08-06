@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.request;
 
-import com.EmployeeTracking.enums.ProjectStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 public class ProjectsRequestDto {
 
     @NotBlank(message = "Project name is required")
-    @Size(min = 1, max = 25, message = "Team name must be between 1 and 50 characters")
+    @Size(min = 1, max = 25, message = "Team name must be between 1 and 25 characters")
     private String name;
 
     @Size(max = 250, message = "Project description must be less than 250 characters")

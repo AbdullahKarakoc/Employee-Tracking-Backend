@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +28,7 @@ public class Projects {
 
     @Id
     @GeneratedValue
-    private UUID projectUUID;
+    private UUID projectId;
     private String name;
     private String description;
     private LocalDateTime startDate;
@@ -39,7 +38,7 @@ public class Projects {
 
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="statusUUID", nullable=false)
+    @JoinColumn(name="statusId", nullable=false)
     private Status status;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)

@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import com.EmployeeTracking.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +30,7 @@ public class Tasks {
 
     @Id
     @GeneratedValue
-    private UUID taskUUID;
+    private UUID taskId;
     private String name;
     private TaskStatus status;
     private String description;
@@ -43,7 +43,7 @@ public class Tasks {
     private List<Employee> employees;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "projectUUID", nullable = true)
+    @JoinColumn(name = "projectId", nullable = true)
     private Projects project;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)

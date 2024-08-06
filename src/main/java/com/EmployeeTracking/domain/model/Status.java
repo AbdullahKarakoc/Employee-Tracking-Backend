@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
 import com.EmployeeTracking.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class Status {
 
     @Id
     @GeneratedValue
-    private UUID statusUUID;
+    private UUID statusId;
     private ProjectStatus status;
     private String description;
     private boolean deleted = Boolean.FALSE;

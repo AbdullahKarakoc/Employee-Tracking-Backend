@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class ProjectRolesResponseDto {
 
-    private UUID projectRolesUUID;
+    private UUID projectRoleId;
     private String employeeRole;
     private String description;
     private ProjectsResponseDto project;

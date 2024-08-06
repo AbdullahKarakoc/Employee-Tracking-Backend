@@ -8,21 +8,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/status")
 @Tag(name = "Status-Controller", description = "Controller managing operations related to project status")
 @SecurityRequirement(name = "bearerAuth")
 public class StatusController {
 
-    @Autowired
-    private StatusService statusService;
+    private final StatusService statusService;
 
     @Operation(
             summary = "Save a new status",

@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class ProjectsResponseDto {
 
-    private UUID projectUUID;
+    private UUID projectId;
     private String name;
     private String description;
     private LocalDateTime startDate;

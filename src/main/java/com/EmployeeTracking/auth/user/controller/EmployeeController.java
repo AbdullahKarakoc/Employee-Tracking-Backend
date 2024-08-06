@@ -1,10 +1,13 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.auth.user.controller;
 
-import com.EmployeeTracking.auth.user.EmployeeResponseDto;
+import com.EmployeeTracking.auth._auth.AuthenticationRequest;
+import com.EmployeeTracking.auth.user.service.EmployeeService;
+import com.EmployeeTracking.auth.user.domain.response.EmployeeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("employees")
 @SecurityRequirement(name = "bearerAuth")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     @Operation(
             summary = "Get all users",

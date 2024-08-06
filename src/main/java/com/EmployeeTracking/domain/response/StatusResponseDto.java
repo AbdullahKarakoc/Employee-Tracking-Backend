@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class StatusResponseDto {
     
-    private UUID statusUUID;
+    private UUID statusId;
     private ProjectStatus status;
     private String description;
     private LocalDateTime createdAt;

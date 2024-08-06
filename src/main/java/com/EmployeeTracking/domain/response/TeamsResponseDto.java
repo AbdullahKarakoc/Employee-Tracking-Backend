@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 public class TeamsResponseDto {
-    private UUID teamUUID;
+    private UUID teamId;
     private String teamName;
     private String description;
     private LocalDateTime createdAt;

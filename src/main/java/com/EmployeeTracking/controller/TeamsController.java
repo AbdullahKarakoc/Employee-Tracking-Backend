@@ -8,21 +8,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/teams")
 @Tag(name = "Teams-Controller", description = "Controller managing operations related to teams")
 @SecurityRequirement(name = "bearerAuth")
 public class TeamsController {
-    @Autowired
-    private TeamsService teamService;
 
+    private final TeamsService teamService;
 
     @Operation(
             summary = "Save a new team",

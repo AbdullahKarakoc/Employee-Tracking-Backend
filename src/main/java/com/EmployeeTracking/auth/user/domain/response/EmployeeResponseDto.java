@@ -1,17 +1,16 @@
-package com.EmployeeTracking.auth.user;
+package com.EmployeeTracking.auth.user.domain.response;
 
 import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 public class EmployeeResponseDto {
 
-    private UUID userUUID;
+    private UUID employeeId;
     private String firstname;
     private String lastname;
     private LocalDate dateOfBirth;

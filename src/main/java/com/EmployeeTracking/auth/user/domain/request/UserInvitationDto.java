@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.auth.user.domain.request;
 
 import lombok.Data;
 

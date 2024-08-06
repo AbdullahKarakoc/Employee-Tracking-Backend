@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,17 +28,17 @@ public class Comments {
 
     @Id
     @GeneratedValue
-    private UUID commentUUID;
+    private UUID commentId;
     private String title;
     private String description;
     private boolean deleted = Boolean.FALSE;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userUUID", nullable = true)
+    @JoinColumn(name = "userId", nullable = true)
     private Employee employee;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "taskUUID", nullable = true)
+    @JoinColumn(name = "taskId", nullable = true)
     private Tasks task;
 
 

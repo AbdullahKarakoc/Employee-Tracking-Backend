@@ -36,5 +36,5 @@ public class TasksRequestDto {
     private LocalDateTime finishDate;
 
     @NotNull(message = "Project ID is required")
-    private UUID projectUUID;
+    private UUID projectId;
 }

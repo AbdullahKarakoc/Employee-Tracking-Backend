@@ -1,11 +1,10 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DialectOverride;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedBy;
@@ -30,7 +29,7 @@ public class Teams {
 
     @Id
     @GeneratedValue
-    private UUID teamUUID;
+    private UUID teamId;
     private String teamName;
     private String description;
     private boolean deleted = Boolean.FALSE;

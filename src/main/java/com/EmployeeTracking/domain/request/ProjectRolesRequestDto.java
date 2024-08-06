@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ProjectRolesRequestDto {
 
     @NotBlank(message = "Employee role is required")
-    @Size(min = 1, max = 25, message = "Employee role name must be between 1 and 50 characters")
+    @Size(min = 1, max = 25, message = "Employee role name must be between 1 and 25 characters")
     private String employeeRole;
 
     @Size(max = 250, message = "Project role description must be less than 250 characters")
@@ -20,6 +20,6 @@ public class ProjectRolesRequestDto {
 
     @Valid
     @NotNull(message = "Project ID is required")
-    private UUID projectUUID;
+    private UUID projectId;
 
 }

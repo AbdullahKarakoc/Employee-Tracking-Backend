@@ -5,13 +5,14 @@ import com.EmployeeTracking.auth.email.EmailTemplateName;
 import com.EmployeeTracking.auth.handler.ActivationTokenExpiredException;
 import com.EmployeeTracking.auth.handler.InvalidTokenException;
 import com.EmployeeTracking.auth.handler.UserAlreadyExistsException;
-import com.EmployeeTracking.auth.role.Role;
 import com.EmployeeTracking.auth.role.RoleRepository;
 import com.EmployeeTracking.auth.security.JwtService;
-import com.EmployeeTracking.auth.user.Employee;
-import com.EmployeeTracking.auth.user.EmployeeRepository;
-import com.EmployeeTracking.auth.user.Token;
-import com.EmployeeTracking.auth.user.TokenRepository;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
+import com.EmployeeTracking.auth.user.domain.request.RegisterDto;
+import com.EmployeeTracking.auth.user.domain.request.UserInvitationDto;
+import com.EmployeeTracking.auth.user.repository.EmployeeRepository;
+import com.EmployeeTracking.auth.user.domain.model.Token;
+import com.EmployeeTracking.auth.user.repository.TokenRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -47,11 +47,11 @@ public class AuthenticationService {
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
 
         if (employeeRepository.findByEmail(userInvitationDto.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User with email " + userInvitationDto.getEmail() + " already exists");
+            throw new UserAlreadyExistsException(String.format("User with email %s already exists", userInvitationDto.getEmail()));
         }
 
         var role = roleRepository.findByName(userInvitationDto.getRole())
-                .orElseThrow(() -> new IllegalStateException("ROLE " + userInvitationDto.getRole() + " was not initiated"));
+                .orElseThrow(() -> new IllegalStateException(String.format("Role %s was not initiated", userInvitationDto.getRole())));
 
         var employee = new Employee();
         employee.setEmail(userInvitationDto.getEmail());
@@ -101,9 +101,10 @@ public class AuthenticationService {
         claims.put("fullName", employee.getFullName());
 
         var jwtToken = jwtService.generateToken(claims, (Employee) auth.getPrincipal());
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+
+        AuthenticationResponse response = new AuthenticationResponse();
+        response.setToken(jwtToken);
+        return response;
     }
 
 
@@ -115,7 +116,7 @@ public class AuthenticationService {
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        var employee = employeeRepository.findById(savedToken.getEmployee().getUserUUID())
+        var employee = employeeRepository.findById(savedToken.getEmployee().getEmployeeId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         employee.setEnabled(true);
         employeeRepository.save(employee);

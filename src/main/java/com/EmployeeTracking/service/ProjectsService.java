@@ -37,7 +37,6 @@ public class ProjectsService {
     public ProjectsResponseDto saveProject(ProjectsRequestDto projectRequestDto) {
         Projects project = modelMapper.map(projectRequestDto, Projects.class);
 
-        // Status'ı ayarlıyoruz
         project.setStatus(modelMapper.map(projectRequestDto.getStatus(), Status.class));
 
         Projects savedProject = save(project);
@@ -49,7 +48,6 @@ public class ProjectsService {
 
         modelMapper.map(projectRequestDto, existingProject);
 
-        // Status'ı ayarlıyoruz
         existingProject.setStatus(modelMapper.map(projectRequestDto.getStatus(), Status.class));
 
         Projects updatedProject = save(existingProject);
@@ -58,7 +56,7 @@ public class ProjectsService {
 
     public void deleteProject(UUID id) {
         Projects project = findById(id);
-        project.setDeleted(true); // Assuming there's a 'deleted' field
+        project.setDeleted(true);
         save(project);
     }
 

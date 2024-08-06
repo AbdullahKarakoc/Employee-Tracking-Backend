@@ -49,7 +49,7 @@ public class TeamsService {
 
     public void deleteTeam(UUID id) {
         Teams team = findById(id);
-        team.setDeleted(true); // Assuming there's a 'deleted' field
+        team.setDeleted(true);
         save(team);
     }
 

@@ -18,8 +18,8 @@ public class CommentsRequestDto {
     private String description;
 
     @NotNull(message = "Employee UUID is required")
-    private UUID employeeUUID;
+    private UUID employeeId;
 
     @NotNull(message = "Task UUID is required")
-    private UUID taskUUID;
+    private UUID taskId;
 }

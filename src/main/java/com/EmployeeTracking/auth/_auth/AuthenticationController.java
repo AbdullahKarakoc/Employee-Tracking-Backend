@@ -1,5 +1,7 @@
 package com.EmployeeTracking.auth._auth;
 
+import com.EmployeeTracking.auth.user.domain.request.RegisterDto;
+import com.EmployeeTracking.auth.user.domain.request.UserInvitationDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;

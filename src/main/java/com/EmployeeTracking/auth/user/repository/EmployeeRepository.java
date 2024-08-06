@@ -1,5 +1,6 @@
-package com.EmployeeTracking.auth.user;
+package com.EmployeeTracking.auth.user.repository;
 
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

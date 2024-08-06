@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,14 +29,14 @@ public class ProjectRoles {
 
     @Id
     @GeneratedValue
-    private UUID projectRolesUUID;
+    private UUID projectRoleId;
     private String employeeRole;
     private String description;
     private boolean deleted = Boolean.FALSE;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "projectUUID", nullable = true)
+    @JoinColumn(name = "projectId", nullable = true)
     private Projects project;
 
     @OneToMany(mappedBy = "projectRole", cascade = CascadeType.ALL)

@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +28,7 @@ public class Performances {
 
     @Id
     @GeneratedValue
-    private UUID performanceUUID;
+    private UUID performanceId;
     private int totalPoint;
     private int commentAmount;
     private int completedTask;

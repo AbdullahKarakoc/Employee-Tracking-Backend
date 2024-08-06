@@ -35,7 +35,7 @@ public class TasksService {
     }
 
     public TasksResponseDto saveTask(TasksRequestDto tasksRequestDto) {
-        Projects project = projectsService.findById(tasksRequestDto.getProjectUUID());
+        Projects project = projectsService.findById(tasksRequestDto.getProjectId());
 
         Tasks task = modelMapper.map(tasksRequestDto, Tasks.class);
         task.setProject(project);
@@ -46,9 +46,8 @@ public class TasksService {
 
     public TasksResponseDto updateTask(UUID id, TasksRequestDto tasksRequestDto) {
         Tasks existingTask = findById(id);
-        Projects project = projectsService.findById(tasksRequestDto.getProjectUUID());
+        Projects project = projectsService.findById(tasksRequestDto.getProjectId());
 
-        // Map the updated fields from the DTO to the existing task
         existingTask.setName(tasksRequestDto.getName());
         existingTask.setStatus(tasksRequestDto.getStatus());
         existingTask.setDescription(tasksRequestDto.getDescription());

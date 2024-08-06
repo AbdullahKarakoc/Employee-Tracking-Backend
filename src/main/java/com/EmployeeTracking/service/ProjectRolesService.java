@@ -37,7 +37,7 @@ public class ProjectRolesService {
     }
 
     public ProjectRolesResponseDto saveProjectRole(ProjectRolesRequestDto projectRolesRequestDto) {
-        Projects project = projectsService.findById(projectRolesRequestDto.getProjectUUID());
+        Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());
 
         ProjectRoles projectRole = modelMapper.map(projectRolesRequestDto, ProjectRoles.class);
         projectRole.setProject(project);
@@ -48,7 +48,7 @@ public class ProjectRolesService {
 
     public ProjectRolesResponseDto updateProjectRole(UUID id, ProjectRolesRequestDto projectRolesRequestDto) {
         ProjectRoles existingProjectRole = findById(id);
-        Projects project = projectsService.findById(projectRolesRequestDto.getProjectUUID());
+        Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());
 
         modelMapper.map(projectRolesRequestDto, existingProjectRole);
         existingProjectRole.setProject(project);

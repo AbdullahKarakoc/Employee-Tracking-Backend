@@ -1,7 +1,7 @@
 package com.EmployeeTracking.service;
 
-import com.EmployeeTracking.auth._auth.EmployeeService;
-import com.EmployeeTracking.auth.user.Employee;
+import com.EmployeeTracking.auth.user.service.EmployeeService;
+import com.EmployeeTracking.auth.user.domain.model.Employee;
 import com.EmployeeTracking.domain.model.Comments;
 import com.EmployeeTracking.domain.model.Tasks;
 import com.EmployeeTracking.domain.request.CommentsRequestDto;
@@ -40,8 +40,8 @@ public class CommentsService {
     }
 
     public CommentsResponseDto saveComment(CommentsRequestDto commentsRequestDto) {
-        Employee employee = employeeService.findById(commentsRequestDto.getEmployeeUUID());
-        Tasks task = tasksService.findById(commentsRequestDto.getTaskUUID());
+        Employee employee = employeeService.findById(commentsRequestDto.getEmployeeId());
+        Tasks task = tasksService.findById(commentsRequestDto.getTaskId());
 
         Comments comment = modelMapper.map(commentsRequestDto, Comments.class);
         comment.setEmployee(employee);
@@ -53,8 +53,8 @@ public class CommentsService {
 
     public CommentsResponseDto updateComment(UUID id, CommentsRequestDto commentsRequestDto) {
         Comments existingComment = findById(id);
-        Employee employee = employeeService.findById(commentsRequestDto.getEmployeeUUID());
-        Tasks task = tasksService.findById(commentsRequestDto.getTaskUUID());
+        Employee employee = employeeService.findById(commentsRequestDto.getEmployeeId());
+        Tasks task = tasksService.findById(commentsRequestDto.getTaskId());
 
         modelMapper.map(commentsRequestDto, existingComment);
         existingComment.setEmployee(employee);

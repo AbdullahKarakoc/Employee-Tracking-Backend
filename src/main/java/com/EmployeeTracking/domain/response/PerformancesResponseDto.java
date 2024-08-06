@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class PerformancesResponseDto {
 
-    private UUID performanceUUID;
+    private UUID performanceId;
     private int totalPoint;
     private int commentAmount;
     private int completedTask;
