@@ -1,13 +1,10 @@
-package com.EmployeeTracking.auth.user.domain.model;
+package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.role.Role;
-import com.EmployeeTracking.domain.model.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;

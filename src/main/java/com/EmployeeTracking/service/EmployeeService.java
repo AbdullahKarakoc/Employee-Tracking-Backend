@@ -1,9 +1,9 @@
-package com.EmployeeTracking.auth.user.service;
+package com.EmployeeTracking.service;
 
 import com.EmployeeTracking.auth._auth.AuthenticationRequest;
-import com.EmployeeTracking.auth.user.domain.model.Employee;
-import com.EmployeeTracking.auth.user.repository.EmployeeRepository;
-import com.EmployeeTracking.auth.user.domain.response.EmployeeResponseDto;
+import com.EmployeeTracking.domain.model.Employee;
+import com.EmployeeTracking.repository.EmployeeRepository;
+import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

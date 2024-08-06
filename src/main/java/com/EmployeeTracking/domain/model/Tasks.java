@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.domain.model.Employee;
 import com.EmployeeTracking.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

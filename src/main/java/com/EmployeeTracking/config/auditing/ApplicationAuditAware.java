@@ -1,6 +1,6 @@
-package com.EmployeeTracking.auth.config;
+package com.EmployeeTracking.config.auditing;
 
-import com.EmployeeTracking.auth.user.domain.model.Employee;
+import com.EmployeeTracking.domain.model.Employee;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

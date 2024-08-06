@@ -1,6 +1,6 @@
 package com.EmployeeTracking.auth.security;
 
-import com.EmployeeTracking.auth.user.repository.EmployeeRepository;
+import com.EmployeeTracking.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,14 +1,13 @@
-package com.EmployeeTracking.auth.user.controller;
+package com.EmployeeTracking.controller;
 
 import com.EmployeeTracking.auth._auth.AuthenticationRequest;
-import com.EmployeeTracking.auth.user.service.EmployeeService;
-import com.EmployeeTracking.auth.user.domain.response.EmployeeResponseDto;
+import com.EmployeeTracking.service.EmployeeService;
+import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

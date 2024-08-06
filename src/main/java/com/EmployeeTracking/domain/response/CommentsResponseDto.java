@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.response;
 
-import com.EmployeeTracking.auth.user.domain.response.EmployeeResponseDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;

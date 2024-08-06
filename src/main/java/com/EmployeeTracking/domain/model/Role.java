@@ -1,6 +1,5 @@
-package com.EmployeeTracking.auth.role;
+package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.auth.user.domain.model.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

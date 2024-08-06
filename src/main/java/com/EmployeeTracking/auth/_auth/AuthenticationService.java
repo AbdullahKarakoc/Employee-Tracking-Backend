@@ -5,14 +5,14 @@ import com.EmployeeTracking.auth.email.EmailTemplateName;
 import com.EmployeeTracking.auth.handler.ActivationTokenExpiredException;
 import com.EmployeeTracking.auth.handler.InvalidTokenException;
 import com.EmployeeTracking.auth.handler.UserAlreadyExistsException;
-import com.EmployeeTracking.auth.role.RoleRepository;
+import com.EmployeeTracking.repository.RoleRepository;
 import com.EmployeeTracking.auth.security.JwtService;
-import com.EmployeeTracking.auth.user.domain.model.Employee;
-import com.EmployeeTracking.auth.user.domain.request.RegisterDto;
-import com.EmployeeTracking.auth.user.domain.request.UserInvitationDto;
-import com.EmployeeTracking.auth.user.repository.EmployeeRepository;
-import com.EmployeeTracking.auth.user.domain.model.Token;
-import com.EmployeeTracking.auth.user.repository.TokenRepository;
+import com.EmployeeTracking.domain.model.Employee;
+import com.EmployeeTracking.domain.request.CompleteRegisterDto;
+import com.EmployeeTracking.domain.request.UserInvitationDto;
+import com.EmployeeTracking.repository.EmployeeRepository;
+import com.EmployeeTracking.domain.model.Token;
+import com.EmployeeTracking.repository.TokenRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,8 +64,8 @@ public class AuthenticationService {
 
 
 
-    public void registerUser(RegisterDto registerDto) {
-        Token token = tokenRepository.findByToken(registerDto.getActivationCode())
+    public void registerUser(CompleteRegisterDto completeRegisterDto) {
+        Token token = tokenRepository.findByToken(completeRegisterDto.getActivationCode())
                 .orElseThrow(() -> new RuntimeException("Invalid activation code"));
 
         if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
@@ -73,10 +73,10 @@ public class AuthenticationService {
         }
 
         Employee employee = token.getEmployee();
-        employee.setFirstname(registerDto.getFirstName());
-        employee.setLastname(registerDto.getLastName());
-        employee.setDateOfBirth(registerDto.getDateOfBirth());
-        employee.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        employee.setFirstname(completeRegisterDto.getFirstName());
+        employee.setLastname(completeRegisterDto.getLastName());
+        employee.setDateOfBirth(completeRegisterDto.getDateOfBirth());
+        employee.setPassword(passwordEncoder.encode(completeRegisterDto.getPassword()));
         employee.setEnabled(true);
 
         employeeRepository.save(employee);

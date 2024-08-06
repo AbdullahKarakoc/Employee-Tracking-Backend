@@ -1,7 +1,7 @@
 package com.EmployeeTracking.auth._auth;
 
-import com.EmployeeTracking.auth.user.domain.request.RegisterDto;
-import com.EmployeeTracking.auth.user.domain.request.UserInvitationDto;
+import com.EmployeeTracking.domain.request.CompleteRegisterDto;
+import com.EmployeeTracking.domain.request.UserInvitationDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("auth")
@@ -22,16 +25,20 @@ public class AuthenticationController {
     @PreAuthorize("hasAuthority('SUPER_USER')")
     @PostMapping("/invite")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> inviteUser(@RequestBody @Valid UserInvitationDto request) throws MessagingException {
+    public ResponseEntity<Map<String, Boolean>> inviteUser(@RequestBody @Valid UserInvitationDto request) throws MessagingException {
         service.inviteUser(request);
-        return ResponseEntity.accepted().build();
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.accepted().body(response);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/complete-register")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterDto request) {
+    public ResponseEntity<Map<String, Boolean>> register(@RequestBody @Valid CompleteRegisterDto request) {
         service.registerUser(request);
-        return ResponseEntity.accepted().build();
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.accepted().body(response);
     }
 
     @PostMapping("/authenticate")

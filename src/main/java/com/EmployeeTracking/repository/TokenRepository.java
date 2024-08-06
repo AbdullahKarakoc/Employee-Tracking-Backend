@@ -1,6 +1,6 @@
-package com.EmployeeTracking.auth.user.repository;
+package com.EmployeeTracking.repository;
 
-import com.EmployeeTracking.auth.user.domain.model.Token;
+import com.EmployeeTracking.domain.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

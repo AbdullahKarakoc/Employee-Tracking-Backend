@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.user.domain.model;
+package com.EmployeeTracking.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;

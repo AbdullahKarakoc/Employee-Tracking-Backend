@@ -1,7 +1,6 @@
 package com.EmployeeTracking.service;
 
-import com.EmployeeTracking.auth.user.service.EmployeeService;
-import com.EmployeeTracking.auth.user.domain.model.Employee;
+import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.domain.model.Comments;
 import com.EmployeeTracking.domain.model.Tasks;
 import com.EmployeeTracking.domain.request.CommentsRequestDto;

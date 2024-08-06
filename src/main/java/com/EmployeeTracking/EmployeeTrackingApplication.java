@@ -1,7 +1,7 @@
 package com.EmployeeTracking;
 
-import com.EmployeeTracking.auth.role.Role;
-import com.EmployeeTracking.auth.role.RoleRepository;
+import com.EmployeeTracking.domain.model.Role;
+import com.EmployeeTracking.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

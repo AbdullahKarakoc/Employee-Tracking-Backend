@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.user.domain.response;
+package com.EmployeeTracking.domain.response;
 
 import jakarta.persistence.Column;
 import lombok.Data;
