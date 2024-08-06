@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.domain.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthenticationRequest {
+public class AuthenticationRequestDto {
     @Email(message = "Email is not well formatted")
     @NotBlank(message = "Email is mandatory")
     private String email;

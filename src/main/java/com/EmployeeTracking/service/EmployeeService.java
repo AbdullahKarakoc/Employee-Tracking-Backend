@@ -1,6 +1,6 @@
 package com.EmployeeTracking.service;
 
-import com.EmployeeTracking.auth._auth.AuthenticationRequest;
+import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.repository.EmployeeRepository;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;
@@ -34,9 +34,9 @@ public class EmployeeService {
 
     }
 
-    public EmployeeResponseDto updateUser(UUID id, AuthenticationRequest authenticationRequest) {
+    public EmployeeResponseDto updateUser(UUID id, AuthenticationRequestDto authenticationRequestDto) {
         Employee existingUser = findById(id);
-        modelMapper.map(authenticationRequest, existingUser);
+        modelMapper.map(authenticationRequestDto, existingUser);
         Employee updatedUser = save(existingUser);
 
         EmployeeResponseDto userDto = modelMapper.map(updatedUser, EmployeeResponseDto.class);

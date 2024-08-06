@@ -1,10 +1,10 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.domain.response;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthenticationResponse {
+public class AuthenticationResponseDto {
     private String token;
 }

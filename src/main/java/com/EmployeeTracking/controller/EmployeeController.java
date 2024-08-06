@@ -1,6 +1,6 @@
 package com.EmployeeTracking.controller;
 
-import com.EmployeeTracking.auth._auth.AuthenticationRequest;
+import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.service.EmployeeService;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,8 +61,8 @@ public class EmployeeController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDto> updateUser(@Valid @PathVariable UUID id, @RequestBody AuthenticationRequest authenticationRequest) {
-        EmployeeResponseDto updatedUser = employeeService.updateUser(id, authenticationRequest);
+    public ResponseEntity<EmployeeResponseDto> updateUser(@Valid @PathVariable UUID id, @RequestBody AuthenticationRequestDto authenticationRequestDto) {
+        EmployeeResponseDto updatedUser = employeeService.updateUser(id, authenticationRequestDto);
         return ResponseEntity.ok(updatedUser);
     }
 

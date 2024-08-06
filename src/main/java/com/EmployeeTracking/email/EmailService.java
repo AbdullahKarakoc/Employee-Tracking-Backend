@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.email;
+package com.EmployeeTracking.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

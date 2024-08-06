@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.security;
+package com.EmployeeTracking.security;
 
 import com.EmployeeTracking.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;

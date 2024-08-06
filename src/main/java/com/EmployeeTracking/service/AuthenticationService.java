@@ -1,12 +1,14 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.service;
 
-import com.EmployeeTracking.auth.email.EmailService;
-import com.EmployeeTracking.auth.email.EmailTemplateName;
-import com.EmployeeTracking.auth.handler.ActivationTokenExpiredException;
-import com.EmployeeTracking.auth.handler.InvalidTokenException;
-import com.EmployeeTracking.auth.handler.UserAlreadyExistsException;
+import com.EmployeeTracking.email.EmailService;
+import com.EmployeeTracking.email.EmailTemplateName;
+import com.EmployeeTracking.exception.ActivationTokenExpiredException;
+import com.EmployeeTracking.exception.InvalidTokenException;
+import com.EmployeeTracking.exception.UserAlreadyExistsException;
+import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
+import com.EmployeeTracking.domain.response.AuthenticationResponseDto;
 import com.EmployeeTracking.repository.RoleRepository;
-import com.EmployeeTracking.auth.security.JwtService;
+import com.EmployeeTracking.security.JwtService;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
 import com.EmployeeTracking.domain.request.UserInvitationDto;
@@ -66,10 +68,10 @@ public class AuthenticationService {
 
     public void registerUser(CompleteRegisterDto completeRegisterDto) {
         Token token = tokenRepository.findByToken(completeRegisterDto.getActivationCode())
-                .orElseThrow(() -> new RuntimeException("Invalid activation code"));
+                .orElseThrow(() -> new InvalidTokenException("Invalid activation code"));
 
         if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
-            throw new RuntimeException("Activation code has expired");
+            throw new ActivationTokenExpiredException("Activation code has expired");
         }
 
         Employee employee = token.getEmployee();
@@ -88,7 +90,7 @@ public class AuthenticationService {
 
 
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -102,7 +104,7 @@ public class AuthenticationService {
 
         var jwtToken = jwtService.generateToken(claims, (Employee) auth.getPrincipal());
 
-        AuthenticationResponse response = new AuthenticationResponse();
+        AuthenticationResponseDto response = new AuthenticationResponseDto();
         response.setToken(jwtToken);
         return response;
     }

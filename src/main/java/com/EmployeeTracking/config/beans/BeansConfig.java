@@ -1,6 +1,6 @@
 package com.EmployeeTracking.config.beans;
 
-import com.EmployeeTracking.auth.security.UserDetailsServiceImpl;
+import com.EmployeeTracking.security.UserDetailsServiceImpl;
 import com.EmployeeTracking.config.auditing.ApplicationAuditAware;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

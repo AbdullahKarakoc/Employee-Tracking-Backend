@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.handler;
+package com.EmployeeTracking.exception;
 
 public class InvalidTokenException extends RuntimeException {
     public InvalidTokenException(String message) {

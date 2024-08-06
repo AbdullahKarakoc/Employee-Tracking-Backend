@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.email;
+package com.EmployeeTracking.email;
 
 import lombok.Getter;
 

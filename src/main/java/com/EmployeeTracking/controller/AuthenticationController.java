@@ -1,7 +1,10 @@
-package com.EmployeeTracking.auth._auth;
+package com.EmployeeTracking.controller;
 
+import com.EmployeeTracking.service.AuthenticationService;
+import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
 import com.EmployeeTracking.domain.request.UserInvitationDto;
+import com.EmployeeTracking.domain.response.AuthenticationResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -42,7 +45,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody @Valid AuthenticationRequest request){
+    public ResponseEntity<AuthenticationResponseDto> authenticate(@RequestBody @Valid AuthenticationRequestDto request){
         return ResponseEntity.ok(service.authenticate(request));
     }
 

@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.security;
+package com.EmployeeTracking.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.handler;
+package com.EmployeeTracking.exception;
 
 public class ActivationTokenExpiredException extends RuntimeException {
     public ActivationTokenExpiredException(String message) {

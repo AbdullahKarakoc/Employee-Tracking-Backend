@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.security;
+package com.EmployeeTracking.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

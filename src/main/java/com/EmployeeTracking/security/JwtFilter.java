@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.security;
+package com.EmployeeTracking.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

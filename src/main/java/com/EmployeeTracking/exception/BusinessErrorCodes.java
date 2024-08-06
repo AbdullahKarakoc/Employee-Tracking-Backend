@@ -1,4 +1,4 @@
-package com.EmployeeTracking.auth.handler;
+package com.EmployeeTracking.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
