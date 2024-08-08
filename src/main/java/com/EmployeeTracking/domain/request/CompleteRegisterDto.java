@@ -7,8 +7,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Data
 public class CompleteRegisterDto {

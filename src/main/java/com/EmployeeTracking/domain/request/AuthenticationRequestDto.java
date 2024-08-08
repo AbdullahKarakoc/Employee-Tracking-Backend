@@ -2,8 +2,6 @@ package com.EmployeeTracking.domain.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 public class AuthenticationRequestDto {
