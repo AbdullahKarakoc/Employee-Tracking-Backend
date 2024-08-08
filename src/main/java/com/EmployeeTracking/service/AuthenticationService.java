@@ -1,5 +1,6 @@
 package com.EmployeeTracking.service;
 
+import com.EmployeeTracking.domain.model.Role;
 import com.EmployeeTracking.email.EmailService;
 import com.EmployeeTracking.email.EmailTemplateName;
 import com.EmployeeTracking.exception.ActivationTokenExpiredException;
@@ -8,6 +9,7 @@ import com.EmployeeTracking.exception.UserAlreadyExistsException;
 import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.response.AuthenticationResponseDto;
 import com.EmployeeTracking.repository.RoleRepository;
+import com.EmployeeTracking.repository.StatusRepository;
 import com.EmployeeTracking.security.JwtService;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,7 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
+    private final StatusRepository statusRepository;
 
 
     @Value("${application.mailing.frontend.activation-url}")
@@ -55,10 +59,10 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists", userInvitationDto.getEmail()));
         }
 
-        var role = roleRepository.findByName(userInvitationDto.getRole())
+        Role role = roleRepository.findByName(userInvitationDto.getRole())
                 .orElseThrow(() -> new IllegalStateException(String.format("Role %s was not initiated", userInvitationDto.getRole())));
 
-        var employee = new Employee();
+        Employee employee = new Employee();
         employee.setEmail(userInvitationDto.getEmail());
         employee.setEnabled(false);
         employee.setRoles(List.of(role));
@@ -94,18 +98,18 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
-        var auth = authenticationManager.authenticate(
+        Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
 
-        var claims = new HashMap<String, Object>();
-        var employee = ((Employee) auth.getPrincipal());
+        HashMap<String, Object> claims =new HashMap<>();
+        Employee employee = ((Employee) auth.getPrincipal());
         claims.put("fullName", employee.getFullName());
 
-        var jwtToken = jwtService.generateToken(claims, (Employee) auth.getPrincipal());
+        String jwtToken = jwtService.generateToken(claims, (Employee) auth.getPrincipal());
 
         AuthenticationResponseDto response = new AuthenticationResponseDto();
         response.setToken(jwtToken);
@@ -122,7 +126,7 @@ public class AuthenticationService {
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        var employee = employeeRepository.findById(savedToken.getEmployee().getEmployeeId())
+        Employee employee = employeeRepository.findById(savedToken.getEmployee().getEmployeeId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         employee.setEnabled(true);
         employeeRepository.save(employee);
@@ -137,7 +141,7 @@ public class AuthenticationService {
     private String generateAndSaveActivationToken(Employee employee) {
 
         String generatedToken = generateActivationCode(6);
-        var token = new Token();
+        Token token = new Token();
         token.setToken(generatedToken);
         token.setCreatedAt(Instant.now());
         token.setExpiresAt(Instant.now().plus(Duration.ofMinutes(15)));
@@ -149,7 +153,7 @@ public class AuthenticationService {
 
 
     private void sendValidationEmail(Employee employee) throws MessagingException {
-        var activationCode = generateAndSaveActivationToken(employee);
+        String activationCode = generateAndSaveActivationToken(employee);
 
         emailService.sendEmail(
                 employee.getEmail(),
