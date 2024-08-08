@@ -13,8 +13,10 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Objects.isNull;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED;
 
 @Service
@@ -34,7 +36,7 @@ public class EmailService {
             String subject
     ) throws MessagingException {
         String templateName;
-        if (emailTemplate == null) {
+        if (isNull(emailTemplate)) {
             templateName = "confirm-email";
         } else {
             templateName = emailTemplate.name();

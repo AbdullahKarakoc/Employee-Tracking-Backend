@@ -7,6 +7,7 @@ import com.EmployeeTracking.domain.request.ProjectRolesRequestDto;
 import com.EmployeeTracking.domain.response.ProjectRolesResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.ProjectRolesRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class ProjectRolesService {
         return modelMapper.map(projectRole, ProjectRolesResponseDto.class);
     }
 
+    @Transactional
     public ProjectRolesResponseDto saveProjectRole(ProjectRolesRequestDto projectRolesRequestDto) {
         Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());
 
@@ -45,6 +47,7 @@ public class ProjectRolesService {
         return modelMapper.map(savedProjectRole, ProjectRolesResponseDto.class);
     }
 
+    @Transactional
     public ProjectRolesResponseDto updateProjectRole(UUID id, ProjectRolesRequestDto projectRolesRequestDto) {
         ProjectRoles existingProjectRole = findById(id);
         Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());

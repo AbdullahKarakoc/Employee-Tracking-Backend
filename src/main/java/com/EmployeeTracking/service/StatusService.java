@@ -48,7 +48,7 @@ public class StatusService {
 
     public void deleteStatus(UUID id) {
         Status status = findById(id);
-        status.setDeleted(true); // Assuming there's a 'deleted' field
+        status.setDeleted(true);
         save(status);
     }
 

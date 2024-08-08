@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommentsService {
 
     private final CommentsRepository commentsRepository;

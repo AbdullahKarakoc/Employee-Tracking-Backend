@@ -21,12 +21,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +51,11 @@ public class AuthenticationService {
 
     @Transactional
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
+        Objects.requireNonNull(userInvitationDto, "User invitation details cannot be null");
+
         Employee existingEmployee = employeeService.findByEmail(userInvitationDto.getEmail());
 
-        if (existingEmployee != null) {
+        if (nonNull(existingEmployee)) {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists", userInvitationDto.getEmail()));
         }
 
@@ -66,6 +73,8 @@ public class AuthenticationService {
 
     @Transactional
     public void registerUser(CompleteRegisterDto completeRegisterDto) {
+        Objects.requireNonNull(completeRegisterDto, "Complete register details cannot be null");
+
         Token token = tokenService.findByToken(completeRegisterDto.getActivationCode());
 
         if (Instant.now().isAfter(token.getExpiresAt())) {
@@ -89,6 +98,8 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
+        Objects.requireNonNull(request, "Authentication request details cannot be null");
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -110,6 +121,8 @@ public class AuthenticationService {
 
     @Transactional
     public String  activateAccount(String token) throws MessagingException {
+        Objects.requireNonNull(token, "Activation token cannot be null");
+
         Token savedToken = tokenService.findByToken(token);
 
         if (Instant.now().isAfter(savedToken.getExpiresAt())) {
