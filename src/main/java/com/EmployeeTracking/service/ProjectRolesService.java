@@ -28,7 +28,7 @@ public class ProjectRolesService {
         List<ProjectRoles> projectRoles = projectRolesRepository.findAll();
         return projectRoles.stream()
                 .map(projectRole -> modelMapper.map(projectRole, ProjectRolesResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ProjectRolesResponseDto getProjectRoleById(UUID id) {

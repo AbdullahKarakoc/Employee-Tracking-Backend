@@ -26,7 +26,7 @@ public class TasksService {
         List<Tasks> tasks = tasksRepository.findAll();
         return tasks.stream()
                 .map(task -> modelMapper.map(task, TasksResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public TasksResponseDto getTaskById(UUID id) {

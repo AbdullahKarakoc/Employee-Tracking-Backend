@@ -25,7 +25,7 @@ public class EmployeeService {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream()
                 .map(employee -> modelMapper.map(employee, EmployeeResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public EmployeeResponseDto getUserById(UUID id) {

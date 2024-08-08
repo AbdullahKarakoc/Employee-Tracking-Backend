@@ -24,7 +24,7 @@ public class TeamsService {
         List<Teams> teams = teamRepository.findAll();
         return teams.stream()
                 .map(team -> modelMapper.map(team, TeamsResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public TeamsResponseDto getTeamById(UUID id) {

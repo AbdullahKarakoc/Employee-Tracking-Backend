@@ -19,14 +19,13 @@ import java.util.stream.Collectors;
 public class ProjectsService {
 
     private final ProjectsRepository projectsRepository;
-    private final StatusService statusService;
     private final ModelMapper modelMapper;
 
     public List<ProjectsResponseDto> getAllProjects() {
         List<Projects> projects = projectsRepository.findAll();
         return projects.stream()
                 .map(project -> modelMapper.map(project, ProjectsResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ProjectsResponseDto getProjectById(UUID id) {
@@ -36,7 +35,6 @@ public class ProjectsService {
 
     public ProjectsResponseDto saveProject(ProjectsRequestDto projectRequestDto) {
         Projects project = modelMapper.map(projectRequestDto, Projects.class);
-
         project.setStatus(modelMapper.map(projectRequestDto.getStatus(), Status.class));
 
         Projects savedProject = save(project);
@@ -45,9 +43,7 @@ public class ProjectsService {
 
     public ProjectsResponseDto updateProject(UUID id, ProjectsRequestDto projectRequestDto) {
         Projects existingProject = findById(id);
-
         modelMapper.map(projectRequestDto, existingProject);
-
         existingProject.setStatus(modelMapper.map(projectRequestDto.getStatus(), Status.class));
 
         Projects updatedProject = save(existingProject);

@@ -24,7 +24,7 @@ public class StatusService {
         List<Status> statuses = statusRepository.findAll();
         return statuses.stream()
                 .map(status -> modelMapper.map(status, StatusResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public StatusResponseDto getStatusById(UUID id) {

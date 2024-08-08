@@ -30,7 +30,7 @@ public class CommentsService {
         List<Comments> comments = commentsRepository.findAll();
         return comments.stream()
                 .map(comment -> modelMapper.map(comment, CommentsResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CommentsResponseDto getCommentById(UUID id) {
@@ -38,6 +38,7 @@ public class CommentsService {
         return modelMapper.map(comment, CommentsResponseDto.class);
     }
 
+    @Transactional
     public CommentsResponseDto saveComment(CommentsRequestDto commentsRequestDto) {
         Employee employee = employeeService.findById(commentsRequestDto.getEmployeeId());
         Tasks task = tasksService.findById(commentsRequestDto.getTaskId());
@@ -50,6 +51,7 @@ public class CommentsService {
         return modelMapper.map(savedComment, CommentsResponseDto.class);
     }
 
+    @Transactional
     public CommentsResponseDto updateComment(UUID id, CommentsRequestDto commentsRequestDto) {
         Comments existingComment = findById(id);
         Employee employee = employeeService.findById(commentsRequestDto.getEmployeeId());

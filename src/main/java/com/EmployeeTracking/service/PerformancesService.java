@@ -24,7 +24,7 @@ public class PerformancesService {
         List<Performances> performances = performancesRepository.findAll();
         return performances.stream()
                 .map(performance -> modelMapper.map(performance, PerformancesResponseDto.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public PerformancesResponseDto getPerformanceById(UUID id) {
@@ -40,9 +40,7 @@ public class PerformancesService {
 
     public PerformancesResponseDto updatePerformance(UUID id, PerformancesRequestDto performancesRequestDto) {
         Performances existingPerformance = findById(id);
-
         modelMapper.map(performancesRequestDto, existingPerformance);
-
         Performances updatedPerformance = save(existingPerformance);
         return modelMapper.map(updatedPerformance, PerformancesResponseDto.class);
     }

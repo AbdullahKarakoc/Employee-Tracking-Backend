@@ -16,6 +16,7 @@ import com.EmployeeTracking.repository.EmployeeRepository;
 import com.EmployeeTracking.domain.model.Token;
 import com.EmployeeTracking.repository.TokenRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +48,7 @@ public class AuthenticationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-
+    @Transactional
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
 
         if (employeeRepository.findByEmail(userInvitationDto.getEmail()).isPresent()) {
@@ -67,7 +68,7 @@ public class AuthenticationService {
     }
 
 
-
+    @Transactional
     public void registerUser(CompleteRegisterDto completeRegisterDto) {
         Token token = tokenRepository.findByToken(completeRegisterDto.getActivationCode())
                 .orElseThrow(() -> new InvalidTokenException("Invalid activation code"));
@@ -91,7 +92,7 @@ public class AuthenticationService {
 
 
 
-
+    @Transactional
     public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -112,6 +113,7 @@ public class AuthenticationService {
     }
 
 
+    @Transactional
     public String  activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
@@ -130,6 +132,7 @@ public class AuthenticationService {
 
         return "http://localhost:3000/complete-registration?activationCode=" + token;
     }
+
 
     private String generateAndSaveActivationToken(Employee employee) {
 
