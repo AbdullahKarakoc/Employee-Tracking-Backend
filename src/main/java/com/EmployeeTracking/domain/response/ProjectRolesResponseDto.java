@@ -2,6 +2,7 @@ package com.EmployeeTracking.domain.response;
 
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,8 +13,8 @@ public class ProjectRolesResponseDto {
     private String employeeRole;
     private String description;
     private ProjectsResponseDto project;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 }

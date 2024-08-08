@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -40,7 +41,7 @@ public class Employee implements UserDetails, Principal {
     private UUID employeeId;
     private String firstname;
     private String lastname;
-    private LocalDate dateOfBirth;
+    private Instant dateOfBirth;
     @Column(unique = true)
     private String email;
     private String phone;
@@ -76,11 +77,11 @@ public class Employee implements UserDetails, Principal {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

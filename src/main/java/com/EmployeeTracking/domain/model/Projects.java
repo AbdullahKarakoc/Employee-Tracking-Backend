@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +32,9 @@ public class Projects {
     private UUID projectId;
     private String name;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime deadline;
-    private LocalDateTime finishDate;
+    private Instant startDate;
+    private Instant deadline;
+    private Instant finishDate;
     private boolean deleted = Boolean.FALSE;
 
 
@@ -50,11 +51,11 @@ public class Projects {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @CreatedBy
     @Column(nullable = false, updatable = false)

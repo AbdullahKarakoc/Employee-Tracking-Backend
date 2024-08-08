@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,15 +22,15 @@ public class ProjectsRequestDto {
 
     @NotNull(message = "Project startDate is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime startDate;
+    private Instant startDate;
 
     @NotNull(message = "Project deadline is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime deadline;
+    private Instant deadline;
 
     @NotNull(message = "Project finishDate is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime finishDate;
+    private Instant finishDate;
 
     @Valid
     @NotNull(message = "Project Status is required")

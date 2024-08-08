@@ -25,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +72,7 @@ public class AuthenticationService {
         Token token = tokenRepository.findByToken(completeRegisterDto.getActivationCode())
                 .orElseThrow(() -> new InvalidTokenException("Invalid activation code"));
 
-        if (LocalDateTime.now().isAfter(token.getExpiresAt())) {
+        if (Instant.now().isAfter(token.getExpiresAt())) {
             throw new ActivationTokenExpiredException("Activation code has expired");
         }
 
@@ -83,7 +85,7 @@ public class AuthenticationService {
 
         employeeRepository.save(employee);
 
-        token.setValidatedAt(LocalDateTime.now());
+        token.setValidatedAt(Instant.now());
         tokenRepository.save(token);
     }
 
@@ -113,7 +115,7 @@ public class AuthenticationService {
     public String  activateAccount(String token) throws MessagingException {
         Token savedToken = tokenRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
-        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
+        if (Instant.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getEmployee());
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
@@ -123,7 +125,7 @@ public class AuthenticationService {
         employee.setEnabled(true);
         employeeRepository.save(employee);
 
-        savedToken.setValidatedAt(LocalDateTime.now());
+        savedToken.setValidatedAt(Instant.now());
         tokenRepository.save(savedToken);
 
         return "http://localhost:3000/complete-registration?activationCode=" + token;
@@ -134,8 +136,8 @@ public class AuthenticationService {
         String generatedToken = generateActivationCode(6);
         var token = new Token();
         token.setToken(generatedToken);
-        token.setCreatedAt(LocalDateTime.now());
-        token.setExpiresAt(LocalDateTime.now().plusMinutes(15));
+        token.setCreatedAt(Instant.now());
+        token.setExpiresAt(Instant.now().plus(Duration.ofMinutes(15)));
         token.setEmployee(employee);
         tokenRepository.save(token);
 

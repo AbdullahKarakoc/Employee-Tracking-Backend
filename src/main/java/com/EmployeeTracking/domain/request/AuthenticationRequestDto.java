@@ -1,11 +1,11 @@
 package com.EmployeeTracking.domain.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class AuthenticationRequestDto {
     @Email(message = "Email is not well formatted")
     @NotBlank(message = "Email is mandatory")

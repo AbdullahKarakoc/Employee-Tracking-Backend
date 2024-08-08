@@ -6,7 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class CompleteRegisterDto {
@@ -21,7 +23,7 @@ public class CompleteRegisterDto {
 
     @NotNull(message = "Birth date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
+    private Instant dateOfBirth;
 
     @Size(min = 8, max = 30, message = "Password must be between 8 and 30 characters")
     @NotBlank(message = "Password is mandatory")

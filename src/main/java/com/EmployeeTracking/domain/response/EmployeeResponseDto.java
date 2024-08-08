@@ -3,6 +3,7 @@ package com.EmployeeTracking.domain.response;
 import jakarta.persistence.Column;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,9 +14,9 @@ public class EmployeeResponseDto {
     private UUID employeeId;
     private String firstname;
     private String lastname;
-    private LocalDate dateOfBirth;
+    private Instant dateOfBirth;
     @Column(unique = true)
     private String email;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 }

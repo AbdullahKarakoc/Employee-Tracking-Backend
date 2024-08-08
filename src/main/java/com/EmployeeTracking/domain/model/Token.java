@@ -3,6 +3,7 @@ package com.EmployeeTracking.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -19,9 +20,9 @@ public class Token {
 
     @Column(unique = true)
     private String token;
-    private LocalDateTime createdAt;
-    private LocalDateTime expiresAt;
-    private LocalDateTime validatedAt;
+    private Instant createdAt;
+    private Instant expiresAt;
+    private Instant validatedAt;
 
     @ManyToOne
     @JoinColumn(name = "employeeId", nullable = false)
