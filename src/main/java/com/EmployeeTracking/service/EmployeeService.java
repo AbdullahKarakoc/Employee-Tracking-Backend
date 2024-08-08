@@ -57,4 +57,9 @@ public class EmployeeService {
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
     }
+
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email).orElse(null);
+    }
+
 }

@@ -23,23 +23,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -53,7 +50,7 @@ public class AuthenticationService {
 
     @Transactional
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
-        Employee existingEmployee = findEmployeeByEmail(userInvitationDto.getEmail());
+        Employee existingEmployee = employeeService.findByEmail(userInvitationDto.getEmail());
 
         if (existingEmployee != null) {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists", userInvitationDto.getEmail()));
@@ -66,7 +63,7 @@ public class AuthenticationService {
         employee.setEnabled(false);
         employee.setRoles(List.of(role));
 
-        saveEmployee(employee);
+        employeeService.save(employee);
         sendValidationEmail(employee);
     }
 
@@ -86,7 +83,7 @@ public class AuthenticationService {
         employee.setPassword(passwordEncoder.encode(completeRegisterDto.getPassword()));
         employee.setEnabled(true);
 
-        saveEmployee(employee);
+        employeeService.save(employee);
 
         token.setValidatedAt(Instant.now());
         saveToken(token);
@@ -124,9 +121,9 @@ public class AuthenticationService {
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        Employee employee = findEmployeeById(savedToken.getEmployee().getEmployeeId());
+        Employee employee = employeeService.findById(savedToken.getEmployee().getEmployeeId());
         employee.setEnabled(true);
-        saveEmployee(employee);
+        employeeService.save(employee);
 
         savedToken.setValidatedAt(Instant.now());
         saveToken(savedToken);
@@ -183,21 +180,8 @@ public class AuthenticationService {
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
     }
 
-    private Employee findEmployeeById(UUID employeeId) {
-        return employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    private void saveEmployee(Employee employee) {
-        employeeRepository.saveAndFlush(employee);
-    }
-
     private void saveToken(Token token) {
         tokenRepository.saveAndFlush(token);
-    }
-
-    private Employee findEmployeeByEmail(String email) {
-        return employeeRepository.findByEmail(email).orElse(null);
     }
 
     private Role findRoleByName(String roleName) {
