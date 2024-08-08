@@ -9,7 +9,6 @@ import com.EmployeeTracking.exception.UserAlreadyExistsException;
 import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.response.AuthenticationResponseDto;
 import com.EmployeeTracking.repository.RoleRepository;
-import com.EmployeeTracking.repository.StatusRepository;
 import com.EmployeeTracking.security.JwtService;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
@@ -34,6 +33,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,6 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
-    private final StatusRepository statusRepository;
 
 
     @Value("${application.mailing.frontend.activation-url}")
@@ -54,28 +53,27 @@ public class AuthenticationService {
 
     @Transactional
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
+        Employee existingEmployee = findEmployeeByEmail(userInvitationDto.getEmail());
 
-        if (employeeRepository.findByEmail(userInvitationDto.getEmail()).isPresent()) {
+        if (existingEmployee != null) {
             throw new UserAlreadyExistsException(String.format("User with email %s already exists", userInvitationDto.getEmail()));
         }
 
-        Role role = roleRepository.findByName(userInvitationDto.getRole())
-                .orElseThrow(() -> new IllegalStateException(String.format("Role %s was not initiated", userInvitationDto.getRole())));
+        Role role = findRoleByName(userInvitationDto.getRole());
 
         Employee employee = new Employee();
         employee.setEmail(userInvitationDto.getEmail());
         employee.setEnabled(false);
         employee.setRoles(List.of(role));
 
-        employeeRepository.save(employee);
+        saveEmployee(employee);
         sendValidationEmail(employee);
     }
 
 
     @Transactional
     public void registerUser(CompleteRegisterDto completeRegisterDto) {
-        Token token = tokenRepository.findByToken(completeRegisterDto.getActivationCode())
-                .orElseThrow(() -> new InvalidTokenException("Invalid activation code"));
+        Token token = findTokenByToken(completeRegisterDto.getActivationCode());
 
         if (Instant.now().isAfter(token.getExpiresAt())) {
             throw new ActivationTokenExpiredException("Activation code has expired");
@@ -88,10 +86,10 @@ public class AuthenticationService {
         employee.setPassword(passwordEncoder.encode(completeRegisterDto.getPassword()));
         employee.setEnabled(true);
 
-        employeeRepository.save(employee);
+        saveEmployee(employee);
 
         token.setValidatedAt(Instant.now());
-        tokenRepository.save(token);
+        saveToken(token);
     }
 
 
@@ -119,20 +117,19 @@ public class AuthenticationService {
 
     @Transactional
     public String  activateAccount(String token) throws MessagingException {
-        Token savedToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
+        Token savedToken = findTokenByToken(token);
+
         if (Instant.now().isAfter(savedToken.getExpiresAt())) {
             sendValidationEmail(savedToken.getEmployee());
             throw new ActivationTokenExpiredException("Activation token has expired. A new token has been sent to the same email address");
         }
 
-        Employee employee = employeeRepository.findById(savedToken.getEmployee().getEmployeeId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Employee employee = findEmployeeById(savedToken.getEmployee().getEmployeeId());
         employee.setEnabled(true);
-        employeeRepository.save(employee);
+        saveEmployee(employee);
 
         savedToken.setValidatedAt(Instant.now());
-        tokenRepository.save(savedToken);
+        saveToken(savedToken);
 
         return "http://localhost:3000/complete-registration?activationCode=" + token;
     }
@@ -146,7 +143,7 @@ public class AuthenticationService {
         token.setCreatedAt(Instant.now());
         token.setExpiresAt(Instant.now().plus(Duration.ofMinutes(15)));
         token.setEmployee(employee);
-        tokenRepository.save(token);
+        saveToken(token);
 
         return generatedToken;
     }
@@ -178,6 +175,34 @@ public class AuthenticationService {
         }
 
         return codeBuilder.toString();
+    }
+
+
+    private Token findTokenByToken(String token) {
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
+    }
+
+    private Employee findEmployeeById(UUID employeeId) {
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private void saveEmployee(Employee employee) {
+        employeeRepository.saveAndFlush(employee);
+    }
+
+    private void saveToken(Token token) {
+        tokenRepository.saveAndFlush(token);
+    }
+
+    private Employee findEmployeeByEmail(String email) {
+        return employeeRepository.findByEmail(email).orElse(null);
+    }
+
+    private Role findRoleByName(String roleName) {
+        return roleRepository.findByName(roleName)
+                .orElseThrow(() -> new IllegalStateException(String.format("Role %s was not initiated", roleName)));
     }
 
 }
