@@ -121,8 +121,6 @@ public class GlobalExceptionHandler {
 //                );
 //    }
 
-
-
     @ExceptionHandler(ActivationTokenExpiredException.class)
     public ResponseEntity<ErrorResponse> handleActivationTokenExpiredException(ActivationTokenExpiredException exp) {
         return ResponseEntity
@@ -133,7 +131,6 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
-
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException exp) {
@@ -160,16 +157,19 @@ public class GlobalExceptionHandler {
 
 
 
-
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException ex, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage()
-        );
-        errorResponse.setTimestamp(LocalDateTime.now());
-        errorResponse.setDetails(request.getDescription(false));
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        ErrorResponse response = ErrorResponse.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .error("Illegal State Exception")
+                .message(ex.getMessage())
+                .details(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
     }
 
 }
