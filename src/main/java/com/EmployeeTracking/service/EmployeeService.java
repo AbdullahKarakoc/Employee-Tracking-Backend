@@ -7,6 +7,8 @@ import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,13 @@ public class EmployeeService {
         Employee employee = findById(id);
         return modelMapper.map(employee, EmployeeResponseDto.class);
 
+    }
+
+    public EmployeeResponseDto getLoggedInUserDetails() {
+        String username = getLoggedInUsername();
+        Employee employee = findByEmail(username);
+
+        return modelMapper.map(employee, EmployeeResponseDto.class);
     }
 
     public EmployeeResponseDto updateUser(UUID id, AuthenticationRequestDto authenticationRequestDto) {
@@ -59,6 +68,11 @@ public class EmployeeService {
 
     public Employee findByEmail(String email) {
         return employeeRepository.findByEmail(email).orElse(null);
+    }
+
+    private String getLoggedInUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 
 }

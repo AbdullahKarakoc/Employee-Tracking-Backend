@@ -51,6 +51,23 @@ public class EmployeeController {
         return ResponseEntity.ok(user);
     }
 
+
+    @Operation(
+            summary = "Get User details",
+            description = "An endpoint used to get details of logged user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved User"),
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "403", description = "Unauthorized access")
+            }
+    )
+    @GetMapping("/me")
+    public ResponseEntity<EmployeeResponseDto> getMyDetails() {
+        EmployeeResponseDto user = employeeService.getLoggedInUserDetails();
+        return ResponseEntity.ok(user);
+    }
+
+
     @Operation(
             summary = "Update User",
             description = "An endpoint used to update an existing User by their ID.",
