@@ -5,6 +5,7 @@ import com.EmployeeTracking.domain.model.ProjectRoles;
 import com.EmployeeTracking.domain.model.Projects;
 import com.EmployeeTracking.domain.request.ProjectRolesRequestDto;
 import com.EmployeeTracking.domain.response.ProjectRolesResponseDto;
+import com.EmployeeTracking.domain.response.ProjectsResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.ProjectRolesRepository;
 import jakarta.transaction.Transactional;
@@ -20,27 +21,26 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectRolesService {
 
-    private final ProjectRolesRepository projectRolesRepository;
     private final ProjectsService projectsService;
+    private final ProjectRolesRepository projectRolesRepository;
     private final ModelMapper modelMapper;
 
-    public List<ProjectRolesResponseDto> getAllProjectRoles() {
-        List<ProjectRoles> projectRoles = projectRolesRepository.findAll();
+    public List<ProjectRolesResponseDto> getAllProjectRoles(UUID projectId) {
+        List<ProjectRoles> projectRoles = projectRolesRepository.findByProject_ProjectId(projectId);
         return projectRoles.stream()
                 .map(projectRole -> modelMapper.map(projectRole, ProjectRolesResponseDto.class))
                 .toList();
     }
 
-    public ProjectRolesResponseDto getProjectRoleById(UUID id) {
-        ProjectRoles projectRole = findById(id);
+    public ProjectRolesResponseDto getProjectRoleById(UUID projectId, UUID roleId) {
+        ProjectRoles projectRole = findByIdAndProjectId(roleId, projectId);
         return modelMapper.map(projectRole, ProjectRolesResponseDto.class);
     }
 
-    @Transactional
-    public ProjectRolesResponseDto saveProjectRole(ProjectRolesRequestDto projectRolesRequestDto) {
-        Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());
+    public ProjectRolesResponseDto saveProjectRole(UUID projectId, ProjectRolesRequestDto requestDto) {
+        Projects project = projectsService.findById(projectId);
 
-        ProjectRoles projectRole = modelMapper.map(projectRolesRequestDto, ProjectRoles.class);
+        ProjectRoles projectRole = modelMapper.map(requestDto, ProjectRoles.class);
         projectRole.setProject(project);
 
         ProjectRoles savedProjectRole = save(projectRole);
@@ -48,19 +48,19 @@ public class ProjectRolesService {
     }
 
     @Transactional
-    public ProjectRolesResponseDto updateProjectRole(UUID id, ProjectRolesRequestDto projectRolesRequestDto) {
-        ProjectRoles existingProjectRole = findById(id);
-        Projects project = projectsService.findById(projectRolesRequestDto.getProjectId());
+    public ProjectRolesResponseDto updateProjectRole(UUID projectId, UUID roleId, ProjectRolesRequestDto requestDto) {
+        ProjectRoles existingProjectRole = findByIdAndProjectId(roleId, projectId);
 
-        modelMapper.map(projectRolesRequestDto, existingProjectRole);
-        existingProjectRole.setProject(project);
+        existingProjectRole.setEmployeeRole(requestDto.getEmployeeRole());
+        existingProjectRole.setDescription(requestDto.getDescription());
+        existingProjectRole.setProject(projectsService.findById(projectId));
 
         ProjectRoles updatedProjectRole = save(existingProjectRole);
         return modelMapper.map(updatedProjectRole, ProjectRolesResponseDto.class);
     }
 
-    public void deleteProjectRole(UUID id) {
-        ProjectRoles projectRole = findById(id);
+    public void deleteProjectRole(UUID projectId, UUID roleId) {
+        ProjectRoles projectRole = findByIdAndProjectId(roleId, projectId);
         projectRole.setDeleted(true);
         save(projectRole);
     }
@@ -69,8 +69,8 @@ public class ProjectRolesService {
         return projectRolesRepository.saveAndFlush(projectRole);
     }
 
-    public ProjectRoles findById(UUID id) {
-        return projectRolesRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Project role not found"));
+    public ProjectRoles findByIdAndProjectId(UUID roleId, UUID projectId) {
+        return projectRolesRepository.findByProjectRoleIdAndProject_ProjectId(roleId, projectId)
+                .orElseThrow(() -> new DataNotFoundException("Project role not found for the given project"));
     }
 }

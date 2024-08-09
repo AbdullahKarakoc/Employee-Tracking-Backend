@@ -18,8 +18,4 @@ public class ProjectRolesRequestDto {
     @Size(max = 250, message = "Project role description must be less than 250 characters")
     private String description;
 
-    @Valid
-    @NotNull(message = "Project ID is required")
-    private UUID projectId;
-
 }
