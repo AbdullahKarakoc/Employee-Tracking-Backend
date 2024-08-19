@@ -5,7 +5,6 @@ import com.EmployeeTracking.domain.model.ProjectRoles;
 import com.EmployeeTracking.domain.model.Projects;
 import com.EmployeeTracking.domain.request.ProjectRolesRequestDto;
 import com.EmployeeTracking.domain.response.ProjectRolesResponseDto;
-import com.EmployeeTracking.domain.response.ProjectsResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.ProjectRolesRepository;
 import jakarta.transaction.Transactional;

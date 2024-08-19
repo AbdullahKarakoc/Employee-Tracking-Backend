@@ -17,4 +17,8 @@ public class RoleService {
                 .orElseThrow(() -> new IllegalStateException(String.format("Role %s was not initiated", name)));
     }
 
+    public Role save(Role role) {
+        return roleRepository.saveAndFlush(role);
+    }
+
 }
