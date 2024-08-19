@@ -21,8 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.security.SecureRandom;
 import java.time.Duration;
@@ -48,6 +46,9 @@ public class AuthenticationService {
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
+
+    @Value("${application.mailing.frontend.complete-registration-url}")
+    private String completeRegistrationUrl;
 
     @Transactional
     public void inviteUser(UserInvitationDto userInvitationDto) throws MessagingException {
@@ -137,7 +138,7 @@ public class AuthenticationService {
         savedToken.setValidatedAt(Instant.now());
         tokenService.save(savedToken);
 
-        return "http://localhost:3000/complete-registration?activationCode=" + token;
+        return completeRegistrationUrl + "?activationCode=" + token;
     }
 
 

@@ -40,6 +40,7 @@ application:
   mailing:
     frontend:
       activation-url: http://localhost:3000/activate-account
+      complete-registration-url: http://localhost:3000/complete-registration
 server:
   port: 8088
 
