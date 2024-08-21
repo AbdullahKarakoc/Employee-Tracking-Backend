@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Component
 @RequiredArgsConstructor
 public class SuperUserSeeder implements CommandLineRunner {
@@ -23,7 +25,7 @@ public class SuperUserSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Role superUserRole = roleService.findByName("SUPER_USER");
 
-        if (employeeService.findByEmail("superuser@gmail.com") == null) {
+        if (isNull(employeeService.findByEmail("superuser@gmail.com"))) {
             Employee superUser = new Employee();
             superUser.setFirstname("Super");
             superUser.setLastname("User");

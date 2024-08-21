@@ -1,12 +1,13 @@
 package com.EmployeeTracking.service;
 
+import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.Performances;
 import com.EmployeeTracking.domain.request.PerformancesRequestDto;
 import com.EmployeeTracking.domain.response.PerformancesResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.PerformancesRepository;
+import com.EmployeeTracking.util.AppUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,31 +18,33 @@ import java.util.UUID;
 public class PerformancesService {
 
     private final PerformancesRepository performancesRepository;
-    private final ModelMapper modelMapper;
 
     public List<PerformancesResponseDto> getAllPerformances() {
         List<Performances> performances = performancesRepository.findAll();
-        return performances.stream()
-                .map(performance -> modelMapper.map(performance, PerformancesResponseDto.class))
-                .toList();
+
+        if (performances.isEmpty()) {
+            return AppUtils.emptyList();
+        }
+
+        return ObjectMapperUtils.mapAll(performances, PerformancesResponseDto.class);
     }
 
     public PerformancesResponseDto getPerformanceById(UUID id) {
         Performances performance = findById(id);
-        return modelMapper.map(performance, PerformancesResponseDto.class);
+        return ObjectMapperUtils.map(performance, PerformancesResponseDto.class);
     }
 
     public PerformancesResponseDto savePerformance(PerformancesRequestDto performancesRequestDto) {
-        Performances performance = modelMapper.map(performancesRequestDto, Performances.class);
+        Performances performance = ObjectMapperUtils.map(performancesRequestDto, Performances.class);
         Performances savedPerformance = save(performance);
-        return modelMapper.map(savedPerformance, PerformancesResponseDto.class);
+        return ObjectMapperUtils.map(savedPerformance, PerformancesResponseDto.class);
     }
 
     public PerformancesResponseDto updatePerformance(UUID id, PerformancesRequestDto performancesRequestDto) {
         Performances existingPerformance = findById(id);
-        modelMapper.map(performancesRequestDto, existingPerformance);
+        ObjectMapperUtils.map(performancesRequestDto, existingPerformance);
         Performances updatedPerformance = save(existingPerformance);
-        return modelMapper.map(updatedPerformance, PerformancesResponseDto.class);
+        return ObjectMapperUtils.map(updatedPerformance, PerformancesResponseDto.class);
     }
 
     public void deletePerformance(UUID id) {

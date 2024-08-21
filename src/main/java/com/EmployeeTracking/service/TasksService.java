@@ -1,13 +1,14 @@
 package com.EmployeeTracking.service;
 
+import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.Projects;
 import com.EmployeeTracking.domain.model.Tasks;
 import com.EmployeeTracking.domain.request.TasksRequestDto;
 import com.EmployeeTracking.domain.response.TasksResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.TasksRepository;
+import com.EmployeeTracking.util.AppUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,28 +20,30 @@ public class TasksService {
 
     private final TasksRepository tasksRepository;
     private final ProjectsService projectsService;
-    private final ModelMapper modelMapper;
 
     public List<TasksResponseDto> getAllTasks() {
         List<Tasks> tasks = tasksRepository.findAll();
-        return tasks.stream()
-                .map(task -> modelMapper.map(task, TasksResponseDto.class))
-                .toList();
+
+        if (tasks.isEmpty()) {
+            return AppUtils.emptyList();
+        }
+
+        return ObjectMapperUtils.mapAll(tasks, TasksResponseDto.class);
     }
 
     public TasksResponseDto getTaskById(UUID id) {
         Tasks task = findById(id);
-        return modelMapper.map(task, TasksResponseDto.class);
+        return ObjectMapperUtils.map(task, TasksResponseDto.class);
     }
 
     public TasksResponseDto saveTask(TasksRequestDto tasksRequestDto) {
         Projects project = projectsService.findById(tasksRequestDto.getProjectId());
 
-        Tasks task = modelMapper.map(tasksRequestDto, Tasks.class);
+        Tasks task = ObjectMapperUtils.map(tasksRequestDto, Tasks.class);
         task.setProject(project);
 
         Tasks savedTask = save(task);
-        return modelMapper.map(savedTask, TasksResponseDto.class);
+        return ObjectMapperUtils.map(savedTask, TasksResponseDto.class);
     }
 
     public TasksResponseDto updateTask(UUID id, TasksRequestDto tasksRequestDto) {
@@ -56,7 +59,7 @@ public class TasksService {
         existingTask.setProject(project);
 
         Tasks updatedTask = save(existingTask);
-        return modelMapper.map(updatedTask, TasksResponseDto.class);
+        return ObjectMapperUtils.map(updatedTask, TasksResponseDto.class);
     }
 
     public void deleteTask(UUID id) {

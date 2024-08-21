@@ -1,12 +1,13 @@
 package com.EmployeeTracking.service;
 
+import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.repository.EmployeeRepository;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
+import com.EmployeeTracking.util.AppUtils;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,21 @@ import java.util.UUID;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-    private final ModelMapper modelMapper;
 
 
     public List<EmployeeResponseDto> getAllUsers() {
         List<Employee> employees = employeeRepository.findAll();
-        return employees.stream()
-                .map(employee -> modelMapper.map(employee, EmployeeResponseDto.class))
-                .toList();
+
+        if (employees.isEmpty()) {
+            return AppUtils.emptyList();
+        }
+
+        return ObjectMapperUtils.mapAll(employees, EmployeeResponseDto.class);
     }
 
     public EmployeeResponseDto getUserById(UUID id) {
         Employee employee = findById(id);
-        return modelMapper.map(employee, EmployeeResponseDto.class);
+        return ObjectMapperUtils.map(employee, EmployeeResponseDto.class);
 
     }
 
@@ -39,15 +42,15 @@ public class EmployeeService {
         String username = getLoggedInUsername();
         Employee employee = findByEmail(username);
 
-        return modelMapper.map(employee, EmployeeResponseDto.class);
+        return ObjectMapperUtils.map(employee, EmployeeResponseDto.class);
     }
 
     public EmployeeResponseDto updateUser(UUID id, AuthenticationRequestDto authenticationRequestDto) {
         Employee existingUser = findById(id);
-        modelMapper.map(authenticationRequestDto, existingUser);
+        ObjectMapperUtils.map(authenticationRequestDto, existingUser);
         Employee updatedUser = save(existingUser);
 
-        EmployeeResponseDto userDto = modelMapper.map(updatedUser, EmployeeResponseDto.class);
+        EmployeeResponseDto userDto = ObjectMapperUtils.map(updatedUser, EmployeeResponseDto.class);
         return userDto;
     }
 
