@@ -1,8 +1,8 @@
 package com.EmployeeTracking.service;
 
 import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
-import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.model.Employee;
+import com.EmployeeTracking.domain.request.CompleteRegisterDto;
 import com.EmployeeTracking.repository.EmployeeRepository;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
@@ -45,9 +45,9 @@ public class EmployeeService {
         return ObjectMapperUtils.map(employee, EmployeeResponseDto.class);
     }
 
-    public EmployeeResponseDto updateUser(UUID id, AuthenticationRequestDto authenticationRequestDto) {
+    public EmployeeResponseDto updateUser(UUID id, CompleteRegisterDto completeRegisterDto) {
         Employee existingUser = findById(id);
-        ObjectMapperUtils.map(authenticationRequestDto, existingUser);
+        ObjectMapperUtils.map(completeRegisterDto, existingUser);
         Employee updatedUser = save(existingUser);
 
         EmployeeResponseDto userDto = ObjectMapperUtils.map(updatedUser, EmployeeResponseDto.class);
