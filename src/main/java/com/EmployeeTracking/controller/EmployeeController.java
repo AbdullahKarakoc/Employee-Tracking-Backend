@@ -79,7 +79,7 @@ public class EmployeeController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDto> updateUser(@Valid @PathVariable UUID id, @RequestBody CompleteRegisterDto completeRegisterDto) {
+    public ResponseEntity<EmployeeResponseDto> updateUser(@Valid @PathVariable UUID id, @RequestBody @Valid CompleteRegisterDto completeRegisterDto) {
         EmployeeResponseDto updatedUser = employeeService.updateUser(id, completeRegisterDto);
         return ResponseEntity.ok(updatedUser);
     }

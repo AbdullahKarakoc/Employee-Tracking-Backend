@@ -78,7 +78,7 @@ public class CommentsController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<CommentsResponseDto> updateComment(@Valid @PathVariable UUID id, @RequestBody CommentsRequestDto commentRequestDto) {
+    public ResponseEntity<CommentsResponseDto> updateComment(@Valid @PathVariable UUID id, @RequestBody @Valid CommentsRequestDto commentRequestDto) {
         CommentsResponseDto updatedComment = commentsService.updateComment(id, commentRequestDto);
         return ResponseEntity.ok(updatedComment);
     }

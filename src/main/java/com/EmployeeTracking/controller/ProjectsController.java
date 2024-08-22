@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public class ProjectsController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectsResponseDto> updateProject(@Valid @PathVariable UUID id, @RequestBody ProjectsRequestDto projectRequestDto) {
+    public ResponseEntity<ProjectsResponseDto> updateProject(@Valid @PathVariable UUID id, @RequestBody @Valid ProjectsRequestDto projectRequestDto) {
         ProjectsResponseDto updatedProject = projectsService.updateProject(id, projectRequestDto);
         return ResponseEntity.ok(updatedProject);
     }

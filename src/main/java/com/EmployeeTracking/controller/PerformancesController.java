@@ -78,7 +78,7 @@ public class PerformancesController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<PerformancesResponseDto> updatePerformance(@Valid @PathVariable UUID id, @RequestBody PerformancesRequestDto performancesRequestDto) {
+    public ResponseEntity<PerformancesResponseDto> updatePerformance(@Valid @PathVariable UUID id, @RequestBody @Valid PerformancesRequestDto performancesRequestDto) {
         PerformancesResponseDto updatedPerformance = performancesService.updatePerformance(id, performancesRequestDto);
         return ResponseEntity.ok(updatedPerformance);
     }
