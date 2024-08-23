@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.response;
 
-import com.EmployeeTracking.enums.ProjectStatus;
+import com.EmployeeTracking.enums.ProcessStatus;
 import lombok.Data;
 
 import java.time.Instant;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public class StatusResponseDto {
     
     private UUID statusId;
-    private ProjectStatus status;
+    private ProcessStatus status;
     private String description;
     private Instant createdAt;
     private Instant updatedAt;

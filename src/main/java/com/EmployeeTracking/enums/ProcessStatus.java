@@ -1,6 +1,6 @@
 package com.EmployeeTracking.enums;
 
-public enum TaskStatus {
+public enum ProcessStatus {
 
     NOT_STARTED("NOT STARTED"),
     IN_PROGRESS("IN PROGRESS"),
@@ -8,10 +8,9 @@ public enum TaskStatus {
     ON_HOLD("ON HOLD"),
     CANCELLED("CANCELLED");
 
-
     private final String value;
 
-    TaskStatus(String value) {
+    ProcessStatus(String value) {
         this.value = value;
     }
 

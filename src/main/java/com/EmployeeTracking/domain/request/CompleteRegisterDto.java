@@ -2,6 +2,7 @@ package com.EmployeeTracking.domain.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,6 +24,10 @@ public class CompleteRegisterDto {
     @NotNull(message = "Birth date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Instant dateOfBirth;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^(\\+90|0)?[0-9]{10}$", message = "Phone number is not valid. Please enter a valid Turkish phone number.")
+    private String phone;
 
     @Size(min = 8, max = 30, message = "Password must be between 8 and 30 characters")
     @NotBlank(message = "Password is mandatory")

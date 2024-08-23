@@ -297,7 +297,7 @@ class EmployeeServiceTest {
         // Arrange
         UUID id = UUID.randomUUID();
         CompleteRegisterDto dto = new CompleteRegisterDto();
-        dto.setEmail("jane.doe@example.com");
+//        dto.setEmail("jane.doe@example.com");
         dto.setPassword("newpassword123");
 
         when(employeeRepository.findById(id)).thenReturn(Optional.empty());

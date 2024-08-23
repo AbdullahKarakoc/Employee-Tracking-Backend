@@ -1,6 +1,5 @@
 package com.EmployeeTracking.controller;
 
-import com.EmployeeTracking.domain.request.AuthenticationRequestDto;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
 import com.EmployeeTracking.service.EmployeeService;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;

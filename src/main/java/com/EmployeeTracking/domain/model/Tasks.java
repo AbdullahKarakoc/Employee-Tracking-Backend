@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.model;
 
-import com.EmployeeTracking.enums.TaskStatus;
+import com.EmployeeTracking.enums.ProcessStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class Tasks {
     @GeneratedValue
     private UUID taskId;
     private String name;
-    private TaskStatus status;
+    private ProcessStatus status;
     private String description;
     private Instant startDate;
     private Instant deadline;

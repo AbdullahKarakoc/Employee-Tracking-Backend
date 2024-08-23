@@ -86,6 +86,7 @@ public class AuthenticationService {
         employee.setFirstname(completeRegisterDto.getFirstName());
         employee.setLastname(completeRegisterDto.getLastName());
         employee.setDateOfBirth(completeRegisterDto.getDateOfBirth());
+        employee.setPhone(completeRegisterDto.getPhone());
         employee.setPassword(passwordEncoder.encode(completeRegisterDto.getPassword()));
         employee.setEnabled(true);
 

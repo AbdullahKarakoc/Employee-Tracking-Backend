@@ -1,6 +1,6 @@
 package com.EmployeeTracking.domain.request;
 
-import com.EmployeeTracking.enums.TaskStatus;
+import com.EmployeeTracking.enums.ProcessStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +18,7 @@ public class TasksRequestDto {
     private String name;
 
     @NotNull(message = "Task status is required")
-    private TaskStatus status;
+    private ProcessStatus status;
 
     @Size(max = 250, message = "Task description must be less than 250 characters")
     private String description;

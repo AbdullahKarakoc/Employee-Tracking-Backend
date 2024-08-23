@@ -1,6 +1,5 @@
 package com.EmployeeTracking.domain.response;
 
-import com.EmployeeTracking.domain.model.Role;
 import jakarta.persistence.Column;
 import lombok.Data;
 
@@ -17,6 +16,7 @@ public class EmployeeResponseDto {
     private Instant dateOfBirth;
     @Column(unique = true)
     private String email;
+    private String phone;
     private List<RoleResponseDto> roles;
     private Instant createdAt;
     private Instant updatedAt;
