@@ -1,35 +1,30 @@
 package com.EmployeeTracking.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.Projects;
+import com.EmployeeTracking.domain.model.Status;
 import com.EmployeeTracking.domain.request.ProjectsRequestDto;
+import com.EmployeeTracking.domain.request.StatusRequestDto;
 import com.EmployeeTracking.domain.response.ProjectsResponseDto;
+import com.EmployeeTracking.domain.response.StatusResponseDto;
+import com.EmployeeTracking.enums.ProcessStatus;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.ProjectsRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProjectsServiceTest {
+class ProjectsServiceTest {
 
     @Mock
     private ProjectsRepository projectsRepository;
@@ -37,138 +32,134 @@ public class ProjectsServiceTest {
     @InjectMocks
     private ProjectsService projectsService;
 
-    private AutoCloseable closeable;
+    private Projects project;
+    private ProjectsRequestDto projectRequestDto;
+    private ProjectsResponseDto projectResponseDto;
+    private StatusRequestDto statusRequestDto;
+    private Status status;
 
     @BeforeEach
-    public void setupTest() {
-        closeable = MockitoAnnotations.openMocks(this);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        // StatusRequestDto oluştur
+        statusRequestDto = new StatusRequestDto();
+        statusRequestDto.setStatus(ProcessStatus.IN_PROGRESS); // Örneğin bir enum kullanıyorsanız bu kısmı ayarlayın
+        statusRequestDto.setDescription("In Progress");
+
+        // ProjectsRequestDto oluştur
+        projectRequestDto = new ProjectsRequestDto();
+        projectRequestDto.setName("Test Project");
+        projectRequestDto.setDescription("This is a test project");
+        projectRequestDto.setStartDate(Instant.parse("2024-01-01T00:00:00Z"));
+        projectRequestDto.setDeadline(Instant.parse("2024-06-01T00:00:00Z"));
+        projectRequestDto.setFinishDate(Instant.parse("2024-05-01T00:00:00Z"));
+        projectRequestDto.setStatus(statusRequestDto);
+
+        // Status oluştur
+        status = new Status();
+        status.setStatus(ProcessStatus.IN_PROGRESS); // Enum kullanıyorsanız bunu ayarlayın
+        status.setDescription("In Progress");
+
+        // Projects oluştur
+        project = new Projects();
+        project.setProjectId(UUID.randomUUID());
+        project.setName("Test Project");
+        project.setDescription("This is a test project");
+        project.setStartDate(Instant.parse("2024-01-01T00:00:00Z"));
+        project.setDeadline(Instant.parse("2024-06-01T00:00:00Z"));
+        project.setFinishDate(Instant.parse("2024-05-01T00:00:00Z"));
+        project.setStatus(status);
+
+        StatusResponseDto statusResponseDto = ObjectMapperUtils.map(status, StatusResponseDto.class);
+
+        // ProjectsResponseDto oluştur
+        projectResponseDto = new ProjectsResponseDto();
+        projectResponseDto.setProjectId(project.getProjectId());
+        projectResponseDto.setName(project.getName());
+        projectResponseDto.setDescription(project.getDescription());
+        projectResponseDto.setStartDate(project.getStartDate());
+        projectResponseDto.setDeadline(project.getDeadline());
+        projectResponseDto.setFinishDate(project.getFinishDate());
+        projectResponseDto.setStatus(statusResponseDto); // StatusResponseDto nesnesini ayarlayın
     }
 
-    @AfterEach
-    public void tearDown() throws Exception {
-        closeable.close();
+
+    @Test
+    void testSaveProject() {
+        when(projectsRepository.saveAndFlush(any(Projects.class))).thenReturn(project);
+
+        ProjectsResponseDto response = projectsService.saveProject(projectRequestDto);
+
+        assertNotNull(response);
+        assertEquals(project.getName(), response.getName());
+        assertEquals(project.getDescription(), response.getDescription());
+
+        verify(projectsRepository, times(1)).saveAndFlush(any(Projects.class));
     }
 
     @Test
-    public void Should_Success_When_SaveProject() {
-        try (var mock = mockStatic(ObjectMapperUtils.class)) {
-            // Arrange
-            UUID projectId = UUID.randomUUID();
-            ProjectsRequestDto requestDto = new ProjectsRequestDto();
-            requestDto.setName("Project Name");
-            requestDto.setDescription("Project Description");
-            requestDto.setStartDate(Instant.now());
-            requestDto.setDeadline(Instant.now().plusSeconds(3600));
-            requestDto.setFinishDate(Instant.now().plusSeconds(7200));
+    void testUpdateProject() {
+        UUID id = project.getProjectId();
+        when(projectsRepository.findById(id)).thenReturn(Optional.of(project));
+        when(projectsRepository.saveAndFlush(any(Projects.class))).thenReturn(project);
 
-            Projects projectEntity = new Projects();
-            projectEntity.setProjectId(projectId);
-            projectEntity.setName("Project Name");
-            projectEntity.setDescription("Project Description");
-            projectEntity.setStartDate(Instant.now());
-            projectEntity.setDeadline(Instant.now().plusSeconds(3600));
-            projectEntity.setFinishDate(Instant.now().plusSeconds(7200));
+        ProjectsResponseDto response = projectsService.updateProject(id, projectRequestDto);
 
-            Projects savedProject = new Projects();
-            savedProject.setProjectId(projectId);
-            savedProject.setName("Project Name");
-            savedProject.setDescription("Project Description");
-            savedProject.setStartDate(Instant.now());
-            savedProject.setDeadline(Instant.now().plusSeconds(3600));
-            savedProject.setFinishDate(Instant.now().plusSeconds(7200));
+        assertNotNull(response);
+        assertEquals(project.getProjectId(), response.getProjectId());
+        assertEquals(project.getName(), response.getName());
 
-            ProjectsResponseDto responseDto = new ProjectsResponseDto();
-            responseDto.setProjectId(projectId);
-            responseDto.setName("Project Name");
-            responseDto.setDescription("Project Description");
-
-            // Stubbing ObjectMapperUtils.map
-            when(ObjectMapperUtils.map(requestDto, Projects.class)).thenReturn(projectEntity);
-            when(ObjectMapperUtils.map(savedProject, ProjectsResponseDto.class)).thenReturn(responseDto);
-
-            // Stubbing ProjectsRepository.saveAndFlush
-            when(projectsRepository.saveAndFlush(any(Projects.class))).thenReturn(savedProject);
-
-            // Act
-            ProjectsResponseDto result = projectsService.saveProject(requestDto);
-
-            // Assert
-            verify(projectsRepository, times(1)).saveAndFlush(argThat(project -> project.getProjectId() != null
-                    && "Project Name".equals(project.getName())
-                    && "Project Description".equals(project.getDescription())
-                    && project.getStartDate() != null
-                    && project.getDeadline() != null
-                    && project.getFinishDate() != null));
-            assertEquals(responseDto, result);
-        }
+        verify(projectsRepository, times(1)).findById(id);
+        verify(projectsRepository, times(1)).saveAndFlush(any(Projects.class));
     }
 
     @Test
-    public void Should_ThrowException_When_SaveProjectWithNullParameter() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            projectsService.saveProject(null);
-        });
+    void testDeleteProject() {
+        UUID id = project.getProjectId();
+        when(projectsRepository.findById(id)).thenReturn(Optional.of(project));
 
-        verify(projectsRepository, times(0)).saveAndFlush(any());
+        projectsService.deleteProject(id);
+
+        assertTrue(project.isDeleted());
+        verify(projectsRepository, times(1)).saveAndFlush(any(Projects.class));
     }
 
     @Test
-    public void Should_ReturnEmptyList_When_NoProjectsFound() {
-        // Arrange
-        when(projectsRepository.findAll()).thenReturn(Collections.emptyList());
+    void testGetAllProjects() {
+        when(projectsRepository.findAll()).thenReturn(List.of(project));
 
-        // Act
-        List<ProjectsResponseDto> result = projectsService.getAllProjects();
+        List<ProjectsResponseDto> response = projectsService.getAllProjects();
 
-        // Assert
-        assertTrue(result.isEmpty());
+        assertNotNull(response);
+        assertFalse(response.isEmpty());
+        assertEquals(1, response.size());
+        assertEquals(project.getName(), response.get(0).getName());
+
+        verify(projectsRepository, times(1)).findAll();
     }
 
     @Test
-    public void Should_ReturnProjectsList_When_ProjectsFound() {
-        try (var mock = mockStatic(ObjectMapperUtils.class)) {
-            // Arrange
-            UUID projectId = UUID.randomUUID();
-            Projects project = new Projects();
-            project.setProjectId(projectId);
-            project.setName("Project Name");
+    void testGetProjectById() {
+        UUID id = project.getProjectId();
+        when(projectsRepository.findById(id)).thenReturn(Optional.of(project));
 
-            ProjectsResponseDto responseDto = new ProjectsResponseDto();
-            responseDto.setProjectId(projectId);
-            responseDto.setName("Project Name");
+        ProjectsResponseDto response = projectsService.getProjectById(id);
 
-            // Stubbing ProjectsRepository.findAll
-            when(projectsRepository.findAll()).thenReturn(List.of(project));
+        assertNotNull(response);
+        assertEquals(project.getProjectId(), response.getProjectId());
+        assertEquals(project.getName(), response.getName());
 
-            // Stubbing ObjectMapperUtils.mapAll
-            when(ObjectMapperUtils.mapAll(any(), eq(ProjectsResponseDto.class)))
-                    .thenAnswer(new Answer<List<ProjectsResponseDto>>() {
-                        @Override
-                        public List<ProjectsResponseDto> answer(InvocationOnMock invocation) throws Throwable {
-                            @SuppressWarnings("unchecked")
-                            List<Projects> projects = (List<Projects>) invocation.getArguments()[0];
-                            return projects.stream()
-                                    .map(p -> ObjectMapperUtils.map(p, ProjectsResponseDto.class))
-                                    .collect(Collectors.toList());
-                        }
-                    });
-
-            // Act
-            List<ProjectsResponseDto> result = projectsService.getAllProjects();
-
-            // Assert
-            assertEquals(1, result.size());
-            assertEquals(responseDto, result.get(0));
-        }
+        verify(projectsRepository, times(1)).findById(id);
     }
 
     @Test
-    public void Should_ThrowException_When_ProjectNotFound() {
-        // Arrange
-        UUID projectId = UUID.randomUUID();
-        when(projectsRepository.findById(projectId)).thenReturn(Optional.empty());
+    void testFindById_projectNotFound() {
+        UUID id = UUID.randomUUID();
+        when(projectsRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(DataNotFoundException.class, () -> projectsService.findById(projectId));
+        assertThrows(DataNotFoundException.class, () -> projectsService.findById(id));
+
+        verify(projectsRepository, times(1)).findById(id);
     }
 }
