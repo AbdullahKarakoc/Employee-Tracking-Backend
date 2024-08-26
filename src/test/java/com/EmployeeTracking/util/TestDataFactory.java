@@ -1,23 +1,16 @@
 package com.EmployeeTracking.util;
 
-import com.EmployeeTracking.domain.model.Projects;
-import com.EmployeeTracking.domain.model.Status;
-import com.EmployeeTracking.domain.model.Tasks;
-import com.EmployeeTracking.domain.model.Teams;
-import com.EmployeeTracking.domain.request.ProjectsRequestDto;
-import com.EmployeeTracking.domain.request.StatusRequestDto;
-import com.EmployeeTracking.domain.request.TasksRequestDto;
-import com.EmployeeTracking.domain.request.TeamsRequestDto;
-import com.EmployeeTracking.domain.response.ProjectsResponseDto;
-import com.EmployeeTracking.domain.response.StatusResponseDto;
-import com.EmployeeTracking.domain.response.TasksResponseDto;
-import com.EmployeeTracking.domain.response.TeamsResponseDto;
+import com.EmployeeTracking.domain.model.*;
+import com.EmployeeTracking.domain.request.*;
+import com.EmployeeTracking.domain.response.*;
 import com.EmployeeTracking.enums.ProcessStatus;
+import org.springframework.scheduling.config.Task;
 
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class TestDataFactory {
 
@@ -144,7 +137,6 @@ public class TestDataFactory {
         return tasksResponseDto;
     }
 
-
     public static Tasks createTask(Projects project) {
         Tasks task = new Tasks();
         task.setTaskId(UUID.randomUUID());
@@ -156,6 +148,141 @@ public class TestDataFactory {
         task.setFinishDate(Instant.parse("2024-05-01T00:00:00Z"));
         task.setProject(project);
         return task;
+    }
+
+    public static CommentsRequestDto createCommentsRequestDto() {
+        CommentsRequestDto commentsRequestDto = new CommentsRequestDto();
+        commentsRequestDto.setTitle("Test Comment");
+        commentsRequestDto.setDescription("This is a test comment");
+        commentsRequestDto.setEmployeeId(UUID.randomUUID());
+        commentsRequestDto.setTaskId(UUID.randomUUID());
+        return commentsRequestDto;
+    }
+
+    public static CommentsResponseDto createCommentsResponseDto(Comments comment) {
+        CommentsResponseDto commentsResponseDto = new CommentsResponseDto();
+        commentsResponseDto.setCommentId(comment.getCommentId());
+        commentsResponseDto.setTitle(comment.getTitle());
+        commentsResponseDto.setDescription(comment.getDescription());
+
+        // Assuming EmployeeResponseDto and TasksResponseDto are properly defined and created elsewhere
+        commentsResponseDto.setEmployee(createEmployeeResponseDto(comment.getEmployee()));
+        commentsResponseDto.setTask(createTasksResponseDto(comment.getTask()));
+
+        commentsResponseDto.setCreatedAt(comment.getCreatedAt());
+        commentsResponseDto.setUpdatedAt(comment.getUpdatedAt());
+        commentsResponseDto.setCreatedBy(comment.getCreatedBy());
+        commentsResponseDto.setUpdatedBy(comment.getUpdatedBy());
+        return commentsResponseDto;
+    }
+
+    public static Comments createComment(Employee employee, Tasks task) {
+        Comments comment = new Comments();
+        comment.setCommentId(UUID.randomUUID());
+        comment.setTitle("Test Comment");
+        comment.setDescription("This is a test comment");
+        comment.setEmployee(employee);
+        comment.setTask(task);
+        comment.setCreatedAt(Instant.now());
+        comment.setUpdatedAt(Instant.now());
+        comment.setCreatedBy("testUser");
+        comment.setUpdatedBy("testUser");
+        return comment;
+    }
+
+    public static EmployeeResponseDto createEmployeeResponseDto(Employee employee) {
+        EmployeeResponseDto responseDto = new EmployeeResponseDto();
+        responseDto.setEmployeeId(employee.getEmployeeId());
+        responseDto.setFirstname(employee.getFirstname());
+        responseDto.setLastname(employee.getLastname());
+        responseDto.setDateOfBirth(employee.getDateOfBirth());
+        responseDto.setEmail(employee.getEmail());
+        responseDto.setPhone(employee.getPhone());
+
+        // Rolleri DTO'ya dönüştür
+        List<RoleResponseDto> roleResponseDtos = employee.getRoles().stream()
+                .map(role -> {
+                    RoleResponseDto roleResponseDto = new RoleResponseDto();
+                    roleResponseDto.setName(role.getName()); // setName metodunu kullanarak roleName'i ayarla
+                    return roleResponseDto;
+                })
+                .collect(Collectors.toList());
+        responseDto.setRoles(roleResponseDtos);
+
+        responseDto.setCreatedAt(employee.getCreatedAt());
+        responseDto.setUpdatedAt(employee.getUpdatedAt());
+
+        return responseDto;
+    }
+
+    public static Employee createEmployee() {
+        // Önce diğer nesneleri oluşturun
+        Status status = TestDataFactory.createStatus();
+        Projects project = createProject(status);
+        Tasks task = createTask(project);
+        Employee employee = new Employee();
+        employee.setEmployeeId(UUID.randomUUID());
+        employee.setFirstname("John");
+        employee.setLastname("Doe");
+        employee.setDateOfBirth(Instant.parse("1990-01-01T00:00:00Z"));
+        employee.setEmail("john.doe@example.com");
+        employee.setPhone("1234567890");
+        employee.setPassword("password"); // Bu, gerçek uygulamalarda şifre hashlenmelidir
+        employee.setAccountLocked(false);
+        employee.setEnabled(true);
+        employee.setDeleted(false);
+
+        // Rol ve diğer ilişkili nesneler için metodları çağırıyoruz
+        employee.setRoles(Collections.singletonList(createRole())); // Tek bir rol oluşturun
+
+        // Diğer ilişkili nesneler (Team, Performance, ProjectRole, Task, Comment) oluşturulabilir
+        employee.setTeam(createTeam()); // Eğer takım eklemeniz gerekiyorsa
+        employee.setPerformance(createPerformance()); // Eğer performans eklemeniz gerekiyorsa
+        employee.setProjectRole(createProjectRole()); // Eğer proje rolü eklemeniz gerekiyorsa
+        employee.setTask(task); // Görev ekleyin
+        employee.setComment(Collections.singletonList(createComment(employee, task))); // Yorumlar ekleyin
+
+        return employee;
+    }
+
+    public static Role createRole() {
+        Role role = new Role();
+        role.setRoleId(UUID.randomUUID());
+        role.setName("ROLE_USER");
+        role.setCreatedDate(Instant.now());
+        role.setLastModifiedDate(Instant.now());
+        return role;
+    }
+
+    public static RoleResponseDto createRoleResponseDto(Role role) {
+        RoleResponseDto roleResponseDto = new RoleResponseDto();
+        roleResponseDto.setName(role.getName());
+        return roleResponseDto;
+    }
+
+    public static Performances createPerformance() {
+        Performances performance = new Performances();
+        performance.setPerformanceId(UUID.randomUUID());
+        performance.setTotalPoint(85);
+        performance.setCommentAmount(10);
+        performance.setCompletedTask(5);
+        performance.setCreatedAt(Instant.now());
+        performance.setUpdatedAt(Instant.now());
+        performance.setCreatedBy("test_user");
+        performance.setUpdatedBy("test_user");
+        return performance;
+    }
+
+    public static ProjectRoles createProjectRole() {
+        ProjectRoles projectRole = new ProjectRoles();
+        projectRole.setProjectRoleId(UUID.randomUUID());
+        projectRole.setEmployeeRole("Developer");
+        projectRole.setDescription("Responsible for development tasks.");
+        projectRole.setCreatedAt(Instant.now());
+        projectRole.setUpdatedAt(Instant.now());
+        projectRole.setCreatedBy("test_user");
+        projectRole.setUpdatedBy("test_user");
+        return projectRole;
     }
 
 }
