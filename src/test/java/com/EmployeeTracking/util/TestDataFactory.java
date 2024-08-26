@@ -307,4 +307,15 @@ public class TestDataFactory {
         return dto;
     }
 
+    public static CompleteRegisterDto createCompleteRegisterDto() {
+        CompleteRegisterDto dto = new CompleteRegisterDto();
+        dto.setFirstName("John");
+        dto.setLastName("Doe");
+        dto.setDateOfBirth(Instant.parse("1990-01-01T00:00:00Z"));
+        dto.setPhone("1234567890");
+        dto.setPassword("securePassword123");
+        dto.setActivationCode("123456");
+        return dto;
+    }
+
 }
