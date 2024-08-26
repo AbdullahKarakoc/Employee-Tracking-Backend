@@ -165,7 +165,6 @@ public class TestDataFactory {
         commentsResponseDto.setTitle(comment.getTitle());
         commentsResponseDto.setDescription(comment.getDescription());
 
-        // Assuming EmployeeResponseDto and TasksResponseDto are properly defined and created elsewhere
         commentsResponseDto.setEmployee(createEmployeeResponseDto(comment.getEmployee()));
         commentsResponseDto.setTask(createTasksResponseDto(comment.getTask()));
 
@@ -199,7 +198,6 @@ public class TestDataFactory {
         responseDto.setEmail(employee.getEmail());
         responseDto.setPhone(employee.getPhone());
 
-        // Rolleri DTO'ya dönüştür
         List<RoleResponseDto> roleResponseDtos = employee.getRoles().stream()
                 .map(role -> {
                     RoleResponseDto roleResponseDto = new RoleResponseDto();
@@ -216,7 +214,6 @@ public class TestDataFactory {
     }
 
     public static Employee createEmployee() {
-        // Önce diğer nesneleri oluşturun
         Status status = TestDataFactory.createStatus();
         Projects project = createProject(status);
         Tasks task = createTask(project);
@@ -227,20 +224,17 @@ public class TestDataFactory {
         employee.setDateOfBirth(Instant.parse("1990-01-01T00:00:00Z"));
         employee.setEmail("john.doe@example.com");
         employee.setPhone("1234567890");
-        employee.setPassword("password"); // Bu, gerçek uygulamalarda şifre hashlenmelidir
+        employee.setPassword("password");
         employee.setAccountLocked(false);
         employee.setEnabled(true);
         employee.setDeleted(false);
 
-        // Rol ve diğer ilişkili nesneler için metodları çağırıyoruz
-        employee.setRoles(Collections.singletonList(createRole())); // Tek bir rol oluşturun
-
-        // Diğer ilişkili nesneler (Team, Performance, ProjectRole, Task, Comment) oluşturulabilir
-        employee.setTeam(createTeam()); // Eğer takım eklemeniz gerekiyorsa
-        employee.setPerformance(createPerformance()); // Eğer performans eklemeniz gerekiyorsa
-        employee.setProjectRole(createProjectRole()); // Eğer proje rolü eklemeniz gerekiyorsa
-        employee.setTask(task); // Görev ekleyin
-        employee.setComment(Collections.singletonList(createComment(employee, task))); // Yorumlar ekleyin
+        employee.setRoles(Collections.singletonList(createRole()));
+        employee.setTeam(createTeam());
+        employee.setPerformance(createPerformance());
+        employee.setProjectRole(createProjectRole());
+        employee.setTask(task);
+        employee.setComment(Collections.singletonList(createComment(employee, task)));
 
         return employee;
     }
@@ -275,6 +269,26 @@ public class TestDataFactory {
 
     public static ProjectRoles createProjectRole() {
         ProjectRoles projectRole = new ProjectRoles();
+        projectRole.setProjectRoleId(UUID.randomUUID());
+        projectRole.setEmployeeRole("Developer");
+        projectRole.setDescription("Responsible for development tasks.");
+        projectRole.setCreatedAt(Instant.now());
+        projectRole.setUpdatedAt(Instant.now());
+        projectRole.setCreatedBy("test_user");
+        projectRole.setUpdatedBy("test_user");
+        return projectRole;
+    }
+
+    public static ProjectRolesRequestDto createProjectRolesRequestDto() {
+        ProjectRolesRequestDto dto = new ProjectRolesRequestDto();
+        dto.setEmployeeRole("Developer");
+        dto.setDescription("Responsible for developing the software components.");
+        return dto;
+    }
+
+    public static ProjectRoles createProjectRoleWithProject() {
+        ProjectRoles projectRole = new ProjectRoles();
+        projectRole.setProject(createProject(createStatus()));
         projectRole.setProjectRoleId(UUID.randomUUID());
         projectRole.setEmployeeRole("Developer");
         projectRole.setDescription("Responsible for development tasks.");
