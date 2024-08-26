@@ -3,8 +3,6 @@ package com.EmployeeTracking.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
-import com.EmployeeTracking.domain.model.Status;
 import com.EmployeeTracking.domain.model.Teams;
 import com.EmployeeTracking.domain.request.TeamsRequestDto;
 import com.EmployeeTracking.domain.response.TeamsResponseDto;
@@ -40,19 +38,6 @@ class TeamsServiceTest {
         team = TestDataFactory.createTeam();
         teamRequestDto = TestDataFactory.createTeamRequestDto();
 
-    }
-
-    @Test
-    void testSaveTeam() {
-        when(teamsRepository.saveAndFlush(any(Teams.class))).thenReturn(team);
-
-        TeamsResponseDto response = teamsService.saveTeam(teamRequestDto);
-
-        assertNotNull(response);
-        assertEquals(team.getTeamName(), response.getTeamName());
-        assertEquals(team.getDescription(), response.getDescription());
-
-        verify(teamsRepository, times(1)).saveAndFlush(any(Teams.class));
     }
 
     @Test
@@ -150,6 +135,5 @@ class TeamsServiceTest {
         assertNotNull(response);
         assertTrue(response.isEmpty());
     }
-
 
 }

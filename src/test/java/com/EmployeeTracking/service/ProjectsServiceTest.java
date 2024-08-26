@@ -16,9 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 class ProjectsServiceTest {
 
@@ -41,17 +39,25 @@ class ProjectsServiceTest {
     }
 
     @Test
-    void testSaveProject() {
+    void testSaveProjectSuccess() {
         when(projectsRepository.saveAndFlush(any(Projects.class))).thenReturn(project);
 
         ProjectsResponseDto response = projectsService.saveProject(projectRequestDto);
 
-        assertNotNull(response);
-        assertEquals(project.getName(), response.getName());
-        assertEquals(project.getDescription(), response.getDescription());
+        ProjectsResponseDto expectedResponse = TestDataFactory.createProjectsResponseDto(project);
+
+        assertNotNull(response, "Response should not be null");
+        assertEquals(expectedResponse.getProjectId(), response.getProjectId(), "Project ID does not match");
+        assertEquals(expectedResponse.getName(), response.getName(), "Project Name does not match");
+        assertEquals(expectedResponse.getDescription(), response.getDescription(), "Description does not match");
+        assertEquals(expectedResponse.getStartDate(), response.getStartDate(), "Start Date does not match");
+        assertEquals(expectedResponse.getDeadline(), response.getDeadline(), "Deadline does not match");
+        assertEquals(expectedResponse.getFinishDate(), response.getFinishDate(), "Finish Date does not match");
+        assertEquals(expectedResponse.getStatus(), response.getStatus(), "Status does not match");
 
         verify(projectsRepository, times(1)).saveAndFlush(any(Projects.class));
     }
+
 
     @Test
     void testUpdateProject() {
@@ -117,4 +123,15 @@ class ProjectsServiceTest {
 
         verify(projectsRepository, times(1)).findById(id);
     }
+
+    @Test
+    void testGetAllProjectsWhenNoProjectsExist(){
+        when(projectsRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<ProjectsResponseDto> response = projectsService.getAllProjects();
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
 }
