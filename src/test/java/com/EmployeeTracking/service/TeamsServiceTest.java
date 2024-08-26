@@ -3,11 +3,13 @@ package com.EmployeeTracking.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.EmployeeTracking.domain.model.Status;
 import com.EmployeeTracking.domain.model.Teams;
 import com.EmployeeTracking.domain.request.TeamsRequestDto;
 import com.EmployeeTracking.domain.response.TeamsResponseDto;
 import com.EmployeeTracking.exception.DataNotFoundException;
 import com.EmployeeTracking.repository.TeamsRepository;
+import com.EmployeeTracking.util.TestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,30 +30,14 @@ class TeamsServiceTest {
 
     private Teams team;
     private TeamsRequestDto teamRequestDto;
-    private TeamsResponseDto teamResponseDto;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Test verilerini oluştur
-        team = new Teams();
-        team.setTeamId(UUID.randomUUID());
-        team.setTeamName("Development");
-        team.setDescription("Develops and maintains software");
+        team = TestDataFactory.createTeam();
+        teamRequestDto = TestDataFactory.createTeamRequestDto();
 
-        teamRequestDto = new TeamsRequestDto();
-        teamRequestDto.setTeamName("Development");
-        teamRequestDto.setDescription("Develops and maintains software");
-
-        teamResponseDto = new TeamsResponseDto();
-        teamResponseDto.setTeamId(team.getTeamId());
-        teamResponseDto.setTeamName(team.getTeamName());
-        teamResponseDto.setDescription(team.getDescription());
-        teamResponseDto.setCreatedAt(team.getCreatedAt());
-        teamResponseDto.setUpdatedAt(team.getUpdatedAt());
-        teamResponseDto.setCreatedBy(team.getCreatedBy());
-        teamResponseDto.setUpdatedBy(team.getUpdatedBy());
     }
 
     @Test
