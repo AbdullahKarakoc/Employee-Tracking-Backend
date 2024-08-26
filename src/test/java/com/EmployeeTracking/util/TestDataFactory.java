@@ -6,6 +6,7 @@ import com.EmployeeTracking.domain.model.Teams;
 import com.EmployeeTracking.domain.request.ProjectsRequestDto;
 import com.EmployeeTracking.domain.request.StatusRequestDto;
 import com.EmployeeTracking.domain.request.TeamsRequestDto;
+import com.EmployeeTracking.domain.response.TeamsResponseDto;
 import com.EmployeeTracking.enums.ProcessStatus;
 
 import java.time.Instant;
@@ -63,5 +64,17 @@ public class TestDataFactory {
         teamRequestDto.setTeamName("Development");
         teamRequestDto.setDescription("Develops and maintains software");
         return teamRequestDto;
+    }
+
+    public static TeamsResponseDto createTeamsResponseDto(Teams team) {
+        TeamsResponseDto responseDto = new TeamsResponseDto();
+        responseDto.setTeamId(team.getTeamId());
+        responseDto.setTeamName(team.getTeamName());
+        responseDto.setDescription(team.getDescription());
+        responseDto.setCreatedAt(team.getCreatedAt());
+        responseDto.setUpdatedAt(team.getUpdatedAt());
+        responseDto.setCreatedBy(team.getCreatedBy());
+        responseDto.setUpdatedBy(team.getUpdatedBy());
+        return responseDto;
     }
 }

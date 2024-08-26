@@ -3,6 +3,7 @@ package com.EmployeeTracking.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.Status;
 import com.EmployeeTracking.domain.model.Teams;
 import com.EmployeeTracking.domain.request.TeamsRequestDto;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,6 +51,26 @@ class TeamsServiceTest {
         assertNotNull(response);
         assertEquals(team.getTeamName(), response.getTeamName());
         assertEquals(team.getDescription(), response.getDescription());
+
+        verify(teamsRepository, times(1)).saveAndFlush(any(Teams.class));
+    }
+
+    @Test
+    void testSaveTeamSuccess() {
+        when(teamsRepository.saveAndFlush(any(Teams.class))).thenReturn(team);
+
+        TeamsResponseDto response = teamsService.saveTeam(teamRequestDto);
+
+        TeamsResponseDto expectedResponse = TestDataFactory.createTeamsResponseDto(team);
+
+        assertNotNull(response);
+        assertEquals(expectedResponse.getTeamId(), response.getTeamId(), "Team ID does not match");
+        assertEquals(expectedResponse.getTeamName(), response.getTeamName(), "Team Name does not match");
+        assertEquals(expectedResponse.getDescription(), response.getDescription(), "Description does not match");
+        assertEquals(expectedResponse.getCreatedAt(), response.getCreatedAt(), "Created At does not match");
+        assertEquals(expectedResponse.getUpdatedAt(), response.getUpdatedAt(), "Updated At does not match");
+        assertEquals(expectedResponse.getCreatedBy(), response.getCreatedBy(), "Created By does not match");
+        assertEquals(expectedResponse.getUpdatedBy(), response.getUpdatedBy(), "Updated By does not match");
 
         verify(teamsRepository, times(1)).saveAndFlush(any(Teams.class));
     }
@@ -118,4 +140,16 @@ class TeamsServiceTest {
 
         verify(teamsRepository, times(1)).findById(id);
     }
+
+    @Test
+    void testGetAllTeamsWhenNoTeamsExist() {
+        when(teamsRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<TeamsResponseDto> response = teamsService.getAllTeams();
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
+
 }
