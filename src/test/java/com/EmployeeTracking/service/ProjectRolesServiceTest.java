@@ -3,6 +3,7 @@ package com.EmployeeTracking.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.*;
 import com.EmployeeTracking.domain.request.ProjectRolesRequestDto;
 import com.EmployeeTracking.domain.response.ProjectRolesResponseDto;
@@ -83,19 +84,29 @@ class ProjectRolesServiceTest {
     }
 
     @Test
-    void testSaveProjectRole() {
+    void testSaveProjectRoleSuccess() {
         UUID projectId = project.getProjectId();
         when(projectsService.findById(projectId)).thenReturn(project);
         when(projectRolesRepository.saveAndFlush(any(ProjectRoles.class))).thenReturn(projectRole);
 
         ProjectRolesResponseDto response = projectRolesService.saveProjectRole(projectId, projectRoleRequestDto);
+        ProjectRolesResponseDto expectedResponse = ObjectMapperUtils.map(projectRole, ProjectRolesResponseDto.class);
 
         assertNotNull(response, "Response should not be null");
-        assertEquals(projectRole.getEmployeeRole(), response.getEmployeeRole(), "Employee role does not match");
+        assertEquals(expectedResponse.getProjectRoleId(), response.getProjectRoleId(), "Project Role ID does not match");
+        assertEquals(expectedResponse.getEmployeeRole(), response.getEmployeeRole(), "Employee role does not match");
+        assertEquals(expectedResponse.getDescription(), response.getDescription(), "Description does not match");
+        assertEquals(expectedResponse.getProject().getProjectId(), response.getProject().getProjectId(), "Project ID does not match");
+        assertEquals(expectedResponse.getCreatedAt(), response.getCreatedAt(), "Created At does not match");
+        assertEquals(expectedResponse.getUpdatedAt(), response.getUpdatedAt(), "Updated At does not match");
+        assertEquals(expectedResponse.getCreatedBy(), response.getCreatedBy(), "Created By does not match");
+        assertEquals(expectedResponse.getUpdatedBy(), response.getUpdatedBy(), "Updated By does not match");
 
         verify(projectsService, times(1)).findById(projectId);
         verify(projectRolesRepository, times(1)).saveAndFlush(any(ProjectRoles.class));
     }
+
+
 
     @Test
     void testUpdateProjectRole() {

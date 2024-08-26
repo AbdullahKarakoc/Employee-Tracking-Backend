@@ -299,4 +299,12 @@ public class TestDataFactory {
         return projectRole;
     }
 
+    public static PerformancesRequestDto createPerformanceRequestDto() {
+        PerformancesRequestDto dto = new PerformancesRequestDto();
+        dto.setTotalPoint(80);
+        dto.setCommentAmount(10);
+        dto.setCompletedTask(5);
+        return dto;
+    }
+
 }
