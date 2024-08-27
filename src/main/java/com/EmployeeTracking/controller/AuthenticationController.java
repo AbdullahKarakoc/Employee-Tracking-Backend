@@ -25,7 +25,7 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PreAuthorize("hasAuthority('SUPER_USER')")
+    @PreAuthorize("hasAuthority('SUPER_USER') or hasAuthority('ADMIN')")
     @PostMapping("/invite")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Map<String, Boolean>> inviteUser(@RequestBody @Valid UserInvitationDto request) throws MessagingException {
