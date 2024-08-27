@@ -3,7 +3,6 @@ package com.EmployeeTracking.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.EmployeeTracking.config.modelMapper.ObjectMapperUtils;
 import com.EmployeeTracking.domain.model.Employee;
 import com.EmployeeTracking.domain.request.CompleteRegisterDto;
 import com.EmployeeTracking.domain.response.EmployeeResponseDto;
@@ -38,20 +37,16 @@ class EmployeeServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Initialize test data
-        employee = TestDataFactory.createEmployee(); // Method to initialize a sample Employee entity
-        completeRegisterDto = TestDataFactory.createCompleteRegisterDto(); // Method to initialize a sample CompleteRegisterDto
+        employee = TestDataFactory.createEmployee();
+        completeRegisterDto = TestDataFactory.createCompleteRegisterDto();
     }
 
     @Test
     void testGetAllUsers() {
-        // Arrange
         when(employeeRepository.findAll()).thenReturn(List.of(employee));
 
-        // Act
         List<EmployeeResponseDto> response = employeeService.getAllUsers();
 
-        // Assert
         assertNotNull(response, "Response should not be null");
         assertFalse(response.isEmpty(), "Response should not be empty");
         assertEquals(1, response.size(), "Response size should be 1");
@@ -102,8 +97,6 @@ class EmployeeServiceTest {
         UUID id = employee.getEmployeeId();
         when(employeeRepository.findById(id)).thenReturn(Optional.of(employee));
         when(employeeRepository.saveAndFlush(any(Employee.class))).thenReturn(employee);
-
-        CompleteRegisterDto completeRegisterDto = TestDataFactory.createCompleteRegisterDto();
 
         EmployeeResponseDto response = employeeService.updateUser(id, completeRegisterDto);
 

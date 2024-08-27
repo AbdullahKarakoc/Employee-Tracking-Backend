@@ -228,14 +228,12 @@ public class TestDataFactory {
         employee.setAccountLocked(false);
         employee.setEnabled(true);
         employee.setDeleted(false);
-
         employee.setRoles(Collections.singletonList(createRole()));
         employee.setTeam(createTeam());
         employee.setPerformance(createPerformance());
         employee.setProjectRole(createProjectRole());
         employee.setTask(task);
         employee.setComment(Collections.singletonList(createComment(employee, task)));
-
         return employee;
     }
 
@@ -318,4 +316,28 @@ public class TestDataFactory {
         return dto;
     }
 
+    public static Token createToken() {
+        Token token = new Token();
+        Employee employee = new Employee();
+        token.setToken(UUID.randomUUID().toString()); // Generate a unique token string
+        token.setCreatedAt(Instant.now()); // Set the current time for createdAt
+        token.setExpiresAt(token.getCreatedAt().plusSeconds(3600)); // Set expiry time (e.g., 1 hour from now)
+        token.setValidatedAt(null); // Initially, the token is not validated
+        token.setEmployee(employee); // Associate the employee with the token
+        return token;
+    }
+
+    public static AuthenticationRequestDto createAuthenticationRequestDto() {
+        AuthenticationRequestDto dto = new AuthenticationRequestDto();
+        dto.setEmail("john.doe@example.com");
+        dto.setPassword("securePassword123");
+        return dto;
+    }
+
+    public static UserInvitationDto createUserInvitationDto(){
+        UserInvitationDto dto = new UserInvitationDto();
+        dto.setEmail("john.doe@example.com");
+        dto.setRole("ROLE_ADMIN");
+        return dto;
+    }
 }
