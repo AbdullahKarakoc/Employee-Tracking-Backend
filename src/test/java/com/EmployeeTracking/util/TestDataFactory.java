@@ -4,7 +4,6 @@ import com.EmployeeTracking.domain.model.*;
 import com.EmployeeTracking.domain.request.*;
 import com.EmployeeTracking.domain.response.*;
 import com.EmployeeTracking.enums.ProcessStatus;
-import org.springframework.scheduling.config.Task;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -319,11 +318,11 @@ public class TestDataFactory {
     public static Token createToken() {
         Token token = new Token();
         Employee employee = new Employee();
-        token.setToken(UUID.randomUUID().toString()); // Generate a unique token string
-        token.setCreatedAt(Instant.now()); // Set the current time for createdAt
-        token.setExpiresAt(token.getCreatedAt().plusSeconds(3600)); // Set expiry time (e.g., 1 hour from now)
-        token.setValidatedAt(null); // Initially, the token is not validated
-        token.setEmployee(employee); // Associate the employee with the token
+        token.setToken(UUID.randomUUID().toString());
+        token.setCreatedAt(Instant.now());
+        token.setExpiresAt(token.getCreatedAt().plusSeconds(3600));
+        token.setValidatedAt(null);
+        token.setEmployee(employee);
         return token;
     }
 
