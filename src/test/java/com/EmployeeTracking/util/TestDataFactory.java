@@ -275,13 +275,7 @@ public class TestDataFactory {
         projectRole.setUpdatedBy("test_user");
         return projectRole;
     }
-
-    public static ProjectRolesRequestDto createProjectRolesRequestDto() {
-        ProjectRolesRequestDto dto = new ProjectRolesRequestDto();
-        dto.setEmployeeRole("Developer");
-        dto.setDescription("Responsible for developing the software components.");
-        return dto;
-    }
+    
 
     public static ProjectRoles createProjectRoleWithProject() {
         ProjectRoles projectRole = new ProjectRoles();
